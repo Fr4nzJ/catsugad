@@ -108,11 +108,16 @@ class AccomplishmentReportController extends Controller
     {
         // Can be extended to fetch from a dedicated Colleges table in the future
         return [
-            'College of Computer Studies' => 'College of Computer Studies',
-            'College of Business Administration' => 'College of Business Administration',
-            'College of Engineering' => 'College of Engineering',
+            'College of Agriculture and Fisheries' => 'College of Agriculture and Fisheries',
             'College of Arts and Sciences' => 'College of Arts and Sciences',
+            'College of Business and Accountancy' => 'College of Business and Accountancy',
             'College of Education' => 'College of Education',
+            'College of Engineering' => 'College of Engineering',
+            'College of Health Sciences' => 'College of Health Sciences',
+            'College of Information and Communications Technology' => 'College of Information and Communications Technology',
+            'College of Industrial Technology' => 'College of Industrial Technology',
+            'College of Law' => 'College of Law',
+            'University College of Education Integrated Laboratory School' => 'University College of Education Integrated Laboratory School',
         ];
     }
 

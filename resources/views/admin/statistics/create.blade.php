@@ -107,10 +107,16 @@
         <div class="columns">
             <div class="column is-3">
                 <div class="admin-sidebar">
-                    <h3><i class="fas fa-chart-bar"></i> Management</h3>
+                    <h3><i class="fas fa-home"></i> Dashboard</h3>
                     <ul>
-                        <li><a href="{{ route('admin.statistics.index') }}"><i class="fas fa-list"></i> Statistics</a></li>
+                        <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Main Dashboard</a></li>
+                    </ul>
+
+                    <h3 style="margin-top: 2rem;"><i class="fas fa-cog"></i> Management</h3>
+                    <ul>
+                        <li><a href="{{ route('admin.statistics.index') }}"><i class="fas fa-chart-pie"></i> Statistics</a></li>
                         <li><a href="{{ route('admin.banners.index') }}"><i class="fas fa-images"></i> Banners</a></li>
+                        <li><a href="{{ route('admin.accomplishment-reports.index') }}"><i class="fas fa-trophy"></i> Accomplishment Reports</a></li>
                         <li><a href="{{ route('admin.charts.index') }}"><i class="fas fa-chart-line"></i> Charts</a></li>
                     </ul>
                 </div>
