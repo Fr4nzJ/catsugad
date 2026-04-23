@@ -31,6 +31,26 @@
             <div style="font-size: 2rem; color: #667eea; margin-bottom: 0.5rem;"><i class="fas fa-chart-line"></i></div>
             <div style="color: #333; font-weight: 600;">Charts</div>
         </a>
+        
+        <a href="{{ route('admin.announcements.index') }}" style="text-decoration: none; padding: 2rem; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; display: block;">
+            <div style="font-size: 2rem; color: #667eea; margin-bottom: 0.5rem;"><i class="fas fa-bullhorn"></i></div>
+            <div style="color: #333; font-weight: 600;">Announcements</div>
+        </a>
+        
+        <a href="{{ route('admin.organization-members.index') }}" style="text-decoration: none; padding: 2rem; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; display: block;">
+            <div style="font-size: 2rem; color: #667eea; margin-bottom: 0.5rem;"><i class="fas fa-sitemap"></i></div>
+            <div style="color: #333; font-weight: 600;">Organization Members</div>
+        </a>
+        
+        <a href="{{ route('admin.programs.index') }}" style="text-decoration: none; padding: 2rem; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; display: block;">
+            <div style="font-size: 2rem; color: #667eea; margin-bottom: 0.5rem;"><i class="fas fa-project-diagram"></i></div>
+            <div style="color: #333; font-weight: 600;">Programs</div>
+        </a>
+        
+        <a href="{{ route('admin.documents.index') }}" style="text-decoration: none; padding: 2rem; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; display: block;">
+            <div style="font-size: 2rem; color: #667eea; margin-bottom: 0.5rem;"><i class="fas fa-file-pdf"></i></div>
+            <div style="color: #333; font-weight: 600;">Documents</div>
+        </a>
     </div>
 </div>
 
