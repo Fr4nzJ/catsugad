@@ -36,4 +36,14 @@ class DocumentController extends Controller
             $document->title . '.' . $document->file_type
         );
     }
+
+    public function gadPlanBudget()
+    {
+        $documents = Document::where('category', 'GAD Plan and Budget')
+            ->orderBy('year', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+        
+        return view('gad-plan-budget', compact('documents'));
+    }
 }

@@ -208,98 +208,47 @@
                     </div>
                 </div>
                 <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link {{ request()->routeIs('programs-services') ? 'is-active' : '' }}" href="{{ route('programs-services') }}">
+                        <a class="navbar-link {{ request()->routeIs('programs.index') ? 'is-active' : '' }}" href="{{ route('programs.index') }}">
                             <span class="icon-text">
                                 <span class="icon"><i class="fas fa-project-diagram"></i></span>
                                 <span>Programs and Services</span>
                             </span>
                         </a>
                         <div class="navbar-dropdown">
-                            <a class="navbar-item" href="{{ route('programs-services.gadvocacy') }}">
-                                <span class="icon"><i class="fas fa-bullhorn"></i></span>
-                                <span>GADVOCACY</span>
-                            </a>
-                            <a class="navbar-item" href="{{ route('programs-services.gawad-medalyang-ginto') }}">
-                                <span class="icon"><i class="fas fa-medal"></i></span>
-                                <span>Gawad Medalyang Ginto</span>
-                            </a>
-                            <a class="navbar-item" href="{{ route('programs-services.campaign-vawc-2022') }}">
-                                <span class="icon"><i class="fas fa-female"></i></span>
-                                <span>Campaign on Violence Against Women and Children 2022</span>
-                            </a>
+                            @forelse($navPrograms as $program)
+                                <a class="navbar-item" href="{{ route('programs.show', $program) }}">
+                                    <span class="icon"><i class="fas fa-project-diagram"></i></span>
+                                    <span>{{ $program->program_name }}</span>
+                                </a>
+                            @empty
+                                <a class="navbar-item" disabled style="color: #999;">
+                                    <span>No programs available</span>
+                                </a>
+                            @endforelse
                         </div>
                 </div>
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link {{ request()->routeIs('gad-plan-budget') ? 'is-active' : '' }}" href="{{ route('gad-plan-budget') }}">
+                    <a class="navbar-link {{ request()->routeIs('gad-plan-budget') ? 'is-active' : '' }}" href="{{ route('documents.index', ['category' => 'GAD Plan and Budget']) }}">
                         <span class="icon-text">
                             <span class="icon"><i class="fas fa-book"></i></span>
                             <span>GAD Plan and Budget</span>
                         </span>
                     </a>
                     <div class="navbar-dropdown">
-                        <a class="navbar-item" href="/storage/pdfs/gad-plan-budget-2025.pdf" target="_blank">
-                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                            <span>GAD Plan and Budget 2025</span>
-                        </a>
-                        <a class="navbar-item" href="/storage/pdfs/gad-plan-budget-2024.pdf" target="_blank">
-                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                            <span>GAD Plan and Budget 2024</span>
-                        </a>
-                        <a class="navbar-item" href="/storage/pdfs/gad-plan-budget-2023.pdf" target="_blank">
-                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                            <span>GAD Plan and Budget 2023</span>
-                        </a>
-                        <a class="navbar-item" href="/storage/pdfs/gad-plan-budget-2022.pdf" target="_blank">
-                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                            <span>GAD Plan and Budget 2022</span>
-                        </a>
-                        <a class="navbar-item" href="/storage/pdfs/gad-plan-budget-2021.pdf" target="_blank">
-                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                            <span>GAD Plan and Budget 2021</span>
-                        </a>
-                        <a class="navbar-item" href="/storage/pdfs/gad-plan-budget-2020.pdf" target="_blank">
-                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                            <span>GAD Plan and Budget 2020</span>
-                        </a>
-                        <a class="navbar-item" href="/storage/pdfs/gad-plan-budget-2019.pdf" target="_blank">
-                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                            <span>GAD Plan and Budget 2019</span>
-                        </a>
-                        <a class="navbar-item" href="/storage/pdfs/gmet-consolidated-1st-sem-2020-2.pdf" target="_blank">
-                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                            <span>GMET Consolidated 1st Sem 2020 2</span>
-                        </a>
-                        <a class="navbar-item" href="/storage/pdfs/2026-certificate-of-review-endorsement.pdf" target="_blank">
-                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                            <span>2026 Certificate of Review and Endorsement</span>
-                        </a>
-                        <a class="navbar-item" href="/storage/pdfs/2025-certificate-of-review-endorsement.pdf" target="_blank">
-                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                            <span>2025 Certificate of Review and Endorsement</span>
-                        </a>
-                        <a class="navbar-item" href="/storage/pdfs/2024-certificate-of-review-endorsement.pdf" target="_blank">
-                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                            <span>2024 Certificate of Review and Endorsement</span>
-                        </a>
-                        <a class="navbar-item" href="/storage/pdfs/2023-certificate-of-review-endorsement.pdf" target="_blank">
-                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                            <span>2023 Certificate of Review and Endorsement</span>
-                        </a>
-                        <a class="navbar-item" href="/storage/pdfs/2022-certificate-of-review-endorsement.pdf" target="_blank">
-                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                            <span>2022 Certificate of Review and Endorsement</span>
-                        </a>
-                        <a class="navbar-item" href="/storage/pdfs/2021-certificate-of-review-endorsement.pdf" target="_blank">
-                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                            <span>2021 Certificate of Review and Endorsement</span>
-                        </a>
-                        <a class="navbar-item" href="/storage/pdfs/2020-certificate-of-review-endorsement.pdf" target="_blank">
-                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                            <span>2020 Certificate of Review and Endorsement</span>
-                        </a>
-                        <a class="navbar-item" href="/storage/pdfs/2019-certificate-of-review-endorsement.pdf" target="_blank">
-                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                            <span>2019 Certificate of Review and Endorsement</span>
+                        @forelse($navGadDocuments as $document)
+                            <a class="navbar-item" href="{{ route('documents.download', $document) }}" target="_blank">
+                                <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                                <span>{{ $document->title }}</span>
+                            </a>
+                        @empty
+                            <a class="navbar-item" disabled style="color: #999;">
+                                <span>No documents available</span>
+                            </a>
+                        @endforelse
+                        <hr class="navbar-divider">
+                        <a class="navbar-item" href="{{ route('documents.index', ['category' => 'GAD Plan and Budget']) }}">
+                            <span class="icon"><i class="fas fa-folder-open"></i></span>
+                            <span>View All Documents</span>
                         </a>
                     </div>
                 </div>

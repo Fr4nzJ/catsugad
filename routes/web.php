@@ -60,18 +60,6 @@ Route::get('/programs-services', function () {
 Route::get('/programs', [ProgramController::class, 'index'])->name('programs.index');
 Route::get('/programs/{program}', [ProgramController::class, 'show'])->name('programs.show');
 
-Route::get('/programs-services/gadvocacy', function () {
-    return view('programs-services.gadvocacy');
-})->name('programs-services.gadvocacy');
-
-Route::get('/programs-services/gawad-medalyang-ginto', function () {
-    return view('programs-services.gawad-medalyang-ginto');
-})->name('programs-services.gawad-medalyang-ginto');
-
-Route::get('/programs-services/campaign-vawc-2022', function () {
-    return view('programs-services.campaign-vawc-2022');
-})->name('programs-services.campaign-vawc-2022');
-
 Route::get('/news-announcements', function () {
     return view('news-announcements');
 })->name('news-announcements');
@@ -92,9 +80,7 @@ Route::get('/reports', function () {
     return view('reports');
 })->name('reports');
 
-Route::get('/gad-plan-budget', function () {
-    return view('gad-plan-budget');
-})->name('gad-plan-budget');
+Route::get('/gad-plan-budget', [DocumentController::class, 'gadPlanBudget'])->name('gad-plan-budget');
 
 // Admin Routes
 Route::prefix('admin')->group(function () {

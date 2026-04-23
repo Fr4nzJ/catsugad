@@ -148,6 +148,10 @@
                         <li><a href="{{ route('admin.banners.index') }}"><i class="fas fa-images"></i> Banners</a></li>
                         <li><a href="{{ route('admin.accomplishment-reports.index') }}"><i class="fas fa-trophy"></i> Accomplishment Reports</a></li>
                         <li><a href="{{ route('admin.charts.index') }}"><i class="fas fa-chart-line"></i> Charts</a></li>
+                        <li><a href="{{ route('admin.announcements.index') }}"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+                        <li><a href="{{ route('admin.organization-members.index') }}"><i class="fas fa-sitemap"></i> Organization Members</a></li>
+                        <li><a href="{{ route('admin.programs.index') }}"><i class="fas fa-project-diagram"></i> Programs</a></li>
+                        <li><a href="{{ route('admin.documents.index') }}"><i class="fas fa-file-pdf"></i> Documents</a></li>
                     </ul>
                 </div>
             </div>
