@@ -153,6 +153,13 @@
                         <li><a href="{{ route('admin.programs.index') }}"><i class="fas fa-project-diagram"></i> Programs</a></li>
                         <li><a href="{{ route('admin.documents.index') }}"><i class="fas fa-file-pdf"></i> Documents</a></li>
                     </ul>
+
+                    <h3 style="margin-top: 2rem;"><i class="fas fa-heart"></i> GAD Modules</h3>
+                    <ul>
+                        <li><a href="{{ route('admin.gad-submissions.index') }}"><i class="fas fa-file-alt"></i> GAD Submissions</a></li>
+                        <li><a href="{{ route('admin.gad-agendas.index') }}"><i class="fas fa-calendar-alt"></i> GAD Agendas</a></li>
+                        <li><a href="{{ route('admin.gad-guidelines.index') }}"><i class="fas fa-book"></i> GAD Guidelines</a></li>
+                    </ul>
                 </div>
             </div>
 

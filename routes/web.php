@@ -18,6 +18,9 @@ use App\Http\Controllers\Admin\AnnouncementController as AdminAnnouncementContro
 use App\Http\Controllers\Admin\OrganizationMemberController;
 use App\Http\Controllers\Admin\ProgramController as AdminProgramController;
 use App\Http\Controllers\Admin\DocumentController as AdminDocumentController;
+use App\Http\Controllers\Admin\GADSubmissionController;
+use App\Http\Controllers\Admin\GADAgendaController;
+use App\Http\Controllers\Admin\GADGuidelineController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -118,5 +121,14 @@ Route::prefix('admin')->group(function () {
         
         // Documents CRUD
         Route::resource('/documents', AdminDocumentController::class, ['names' => 'admin.documents']);
+        
+        // GAD Submissions CRUD (LGU-Based GAD Processing)
+        Route::resource('/gad-submissions', GADSubmissionController::class, ['names' => 'admin.gad-submissions']);
+        
+        // GAD Agendas CRUD (2026-2031 Strategic Plans)
+        Route::resource('/gad-agendas', GADAgendaController::class, ['names' => 'admin.gad-agendas']);
+        
+        // GAD Guidelines CRUD (Policies & Memorandum)
+        Route::resource('/gad-guidelines', GADGuidelineController::class, ['names' => 'admin.gad-guidelines']);
     });
 });
