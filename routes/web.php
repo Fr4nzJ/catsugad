@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\DocumentController as AdminDocumentController;
 use App\Http\Controllers\Admin\GADSubmissionController;
 use App\Http\Controllers\Admin\GADAgendaController;
 use App\Http\Controllers\Admin\GADGuidelineController;
+use App\Http\Controllers\Admin\ActivityLogController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -129,5 +130,12 @@ Route::prefix('admin')->group(function () {
         
         // GAD Guidelines CRUD (Policies & Memorandum)
         Route::resource('/gad-guidelines', GADGuidelineController::class, ['names' => 'admin.gad-guidelines']);
+        
+        // Activity Logs - Admin Activity History
+        Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('admin.activity-logs.index');
+        Route::get('/activity-logs/filter', [ActivityLogController::class, 'filter'])->name('admin.activity-logs.filter');
+        Route::get('/activity-logs/{activityLog}', [ActivityLogController::class, 'show'])->name('admin.activity-logs.show');
+        Route::post('/activity-logs/export', [ActivityLogController::class, 'export'])->name('admin.activity-logs.export');
+        Route::post('/activity-logs/clear', [ActivityLogController::class, 'clearOldLogs'])->name('admin.activity-logs.clear');
     });
 });

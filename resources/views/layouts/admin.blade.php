@@ -160,6 +160,11 @@
                         <li><a href="{{ route('admin.gad-agendas.index') }}"><i class="fas fa-calendar-alt"></i> GAD Agendas</a></li>
                         <li><a href="{{ route('admin.gad-guidelines.index') }}"><i class="fas fa-book"></i> GAD Guidelines</a></li>
                     </ul>
+
+                    <h3 style="margin-top: 2rem;"><i class="fas fa-lock"></i> Security & Logs</h3>
+                    <ul>
+                        <li><a href="{{ route('admin.activity-logs.index') }}"><i class="fas fa-history"></i> Activity History</a></li>
+                    </ul>
                 </div>
             </div>
 

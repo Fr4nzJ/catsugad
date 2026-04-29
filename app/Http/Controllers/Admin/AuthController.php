@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Helpers\LogActivity;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -27,6 +28,11 @@ class AuthController extends Controller
 
         if ($credentials['email'] === $adminEmail && $credentials['password'] === $adminPassword) {
             session(['admin_authenticated' => true]);
+            session(['admin_email' => $credentials['email']]);
+            
+            // Log login activity
+            LogActivity::logLogin($credentials['email']);
+            
             return redirect()->route('admin.dashboard')->with('success', 'Login successful!');
         }
 
@@ -35,7 +41,13 @@ class AuthController extends Controller
 
     public function logout()
     {
+        // Log logout activity
+        $email = session('admin_email');
+        LogActivity::logLogout();
+        
         session()->forget('admin_authenticated');
+        session()->forget('admin_email');
+        
         return redirect()->route('admin.login')->with('success', 'Logout successful!');
     }
 }
