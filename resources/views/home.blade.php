@@ -312,4 +312,6 @@
 
         @endif
     </script>
+
+    @include('components.latest-announcements')
 @endsection

@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\GADGuideline;
+use App\Traits\LogsActivityTrait;
 use Illuminate\Http\Request;
 
 class GADGuidelineController extends Controller
 {
+    use LogsActivityTrait;
+
     public function index()
     {
         $guidelines = GADGuideline::orderBy('created_at', 'desc')->paginate(10);
@@ -51,7 +54,8 @@ class GADGuidelineController extends Controller
             $data['file_original_name'] = $file->getClientOriginalName();
         }
 
-        GADGuideline::create($data);
+        $guideline = GADGuideline::create($data);
+        $this->logCreate($guideline, $guideline->title);
         
         return redirect()->route('admin.gad-guidelines.index')
                        ->with('success', 'GAD Guideline created successfully!');
@@ -66,6 +70,7 @@ class GADGuidelineController extends Controller
 
     public function update(Request $request, GADGuideline $gadGuideline)
     {
+        $oldValues = $gadGuideline->getAttributes();
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -92,6 +97,7 @@ class GADGuidelineController extends Controller
         }
 
         $gadGuideline->update($data);
+        $this->logUpdate($gadGuideline, $oldValues, $gadGuideline->title);
         
         return redirect()->route('admin.gad-guidelines.index')
                        ->with('success', 'GAD Guideline updated successfully!');
@@ -99,6 +105,7 @@ class GADGuidelineController extends Controller
 
     public function destroy(GADGuideline $gadGuideline)
     {
+        $this->logDelete($gadGuideline, $gadGuideline->title);
         $gadGuideline->delete();
         
         return redirect()->route('admin.gad-guidelines.index')

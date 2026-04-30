@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Program;
+use App\Traits\LogsActivityTrait;
 use Illuminate\Http\Request;
 
 class ProgramController extends Controller
 {
+    use LogsActivityTrait;
+
     public function index()
     {
         $programs = Program::orderBy('created_at', 'desc')->paginate(10);
@@ -36,7 +39,8 @@ class ProgramController extends Controller
             $data['image_path'] = $request->file('image')->store('programs', 'public');
         }
 
-        Program::create($data);
+        $program = Program::create($data);
+        $this->logCreate($program, $program->program_name);
         return redirect()->route('admin.programs.index')->with('success', 'Program created successfully!');
     }
 
@@ -48,6 +52,7 @@ class ProgramController extends Controller
 
     public function update(Request $request, Program $program)
     {
+        $oldValues = $program->getAttributes();
         $validated = $request->validate([
             'program_name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -66,11 +71,13 @@ class ProgramController extends Controller
         }
 
         $program->update($data);
+        $this->logUpdate($program, $oldValues, $program->program_name);
         return redirect()->route('admin.programs.index')->with('success', 'Program updated successfully!');
     }
 
     public function destroy(Program $program)
     {
+        $this->logDelete($program, $program->program_name);
         if ($program->image_path) {
             \Storage::disk('public')->delete($program->image_path);
         }

@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\GADSubmission;
+use App\Traits\LogsActivityTrait;
 use Illuminate\Http\Request;
 
 class GADSubmissionController extends Controller
 {
+    use LogsActivityTrait;
+
     public function index()
     {
         $submissions = GADSubmission::orderBy('created_at', 'desc')->paginate(10);
@@ -50,7 +53,8 @@ class GADSubmissionController extends Controller
             $data['document_original_name'] = $file->getClientOriginalName();
         }
 
-        GADSubmission::create($data);
+        $submission = GADSubmission::create($data);
+        $this->logCreate($submission, $submission->title);
         
         return redirect()->route('admin.gad-submissions.index')
                        ->with('success', 'GAD Submission created successfully!');
@@ -65,6 +69,7 @@ class GADSubmissionController extends Controller
 
     public function update(Request $request, GADSubmission $gadSubmission)
     {
+        $oldValues = $gadSubmission->getAttributes();
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'lgu_name' => 'required|string|max:255',
@@ -91,6 +96,7 @@ class GADSubmissionController extends Controller
         }
 
         $gadSubmission->update($data);
+        $this->logUpdate($gadSubmission, $oldValues, $gadSubmission->title);
         
         return redirect()->route('admin.gad-submissions.index')
                        ->with('success', 'GAD Submission updated successfully!');
@@ -98,6 +104,7 @@ class GADSubmissionController extends Controller
 
     public function destroy(GADSubmission $gadSubmission)
     {
+        $this->logDelete($gadSubmission, $gadSubmission->title);
         $gadSubmission->delete();
         
         return redirect()->route('admin.gad-submissions.index')

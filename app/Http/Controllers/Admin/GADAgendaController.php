@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\GADAgenda;
+use App\Traits\LogsActivityTrait;
 use Illuminate\Http\Request;
 
 class GADAgendaController extends Controller
 {
+    use LogsActivityTrait;
+
     public function index()
     {
         $agendas = GADAgenda::orderBy('created_at', 'desc')->paginate(10);
@@ -36,7 +39,8 @@ class GADAgendaController extends Controller
             'status' => 'required|in:Active,Inactive',
         ]);
 
-        GADAgenda::create($validated);
+        $agenda = GADAgenda::create($validated);
+        $this->logCreate($agenda, $agenda->agenda_title);
         
         return redirect()->route('admin.gad-agendas.index')
                        ->with('success', 'GAD Agenda created successfully!');
@@ -51,6 +55,7 @@ class GADAgendaController extends Controller
 
     public function update(Request $request, GADAgenda $gadAgenda)
     {
+        $oldValues = $gadAgenda->getAttributes();
         $validated = $request->validate([
             'agenda_title' => 'required|string|max:255',
             'organization' => 'required|string|max:255',
@@ -62,6 +67,7 @@ class GADAgendaController extends Controller
         ]);
 
         $gadAgenda->update($validated);
+        $this->logUpdate($gadAgenda, $oldValues, $gadAgenda->agenda_title);
         
         return redirect()->route('admin.gad-agendas.index')
                        ->with('success', 'GAD Agenda updated successfully!');
@@ -69,6 +75,7 @@ class GADAgendaController extends Controller
 
     public function destroy(GADAgenda $gadAgenda)
     {
+        $this->logDelete($gadAgenda, $gadAgenda->agenda_title);
         $gadAgenda->delete();
         
         return redirect()->route('admin.gad-agendas.index')

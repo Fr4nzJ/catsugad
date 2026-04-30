@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\AccomplishmentReport;
+use App\Traits\LogsActivityTrait;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class AccomplishmentReportController extends Controller
 {
+    use LogsActivityTrait;
+
     /**
-     * Display admin listing of accomplishment reports
+     * Display admin listing of accomplishment reports with enrollment data
      */
     public function index(Request $request)
     {
@@ -25,7 +28,12 @@ class AccomplishmentReportController extends Controller
             ->sort()
             ->values();
 
-        return view('admin.accomplishment-reports.index', compact('reports', 'colleges'));
+        // Get sex-disaggregated enrollment data
+        $enrollmentData = \App\Helpers\EnrollmentAggregator::getByCollege('2025-2026', 'Second Semester');
+        $enrollmentStats = \App\Helpers\EnrollmentAggregator::getUniversityStats('2025-2026', 'Second Semester');
+        $enrollmentByCollege = $enrollmentData->keyBy('college_name');
+
+        return view('admin.accomplishment-reports.index', compact('reports', 'colleges', 'enrollmentByCollege', 'enrollmentStats', 'enrollmentData'));
     }
 
     /**
@@ -53,7 +61,8 @@ class AccomplishmentReportController extends Controller
             'participants_count' => 'required|integer|min:0',
         ]);
 
-        AccomplishmentReport::create($validated);
+        $report = AccomplishmentReport::create($validated);
+        $this->logCreate($report, $report->title);
 
         return redirect()->route('admin.accomplishment-reports.index')
             ->with('success', 'Accomplishment report created successfully');
@@ -75,6 +84,7 @@ class AccomplishmentReportController extends Controller
      */
     public function update(Request $request, AccomplishmentReport $accomplishmentReport)
     {
+        $oldValues = $accomplishmentReport->getAttributes();
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
@@ -85,6 +95,7 @@ class AccomplishmentReportController extends Controller
         ]);
 
         $accomplishmentReport->update($validated);
+        $this->logUpdate($accomplishmentReport, $oldValues, $accomplishmentReport->title);
 
         return redirect()->route('admin.accomplishment-reports.index')
             ->with('success', 'Accomplishment report updated successfully');
@@ -95,6 +106,7 @@ class AccomplishmentReportController extends Controller
      */
     public function destroy(AccomplishmentReport $accomplishmentReport)
     {
+        $this->logDelete($accomplishmentReport, $accomplishmentReport->title);
         $accomplishmentReport->delete();
 
         return redirect()->route('admin.accomplishment-reports.index')

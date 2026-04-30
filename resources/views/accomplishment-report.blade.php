@@ -22,7 +22,7 @@
                 <label style="display: block; color: #333; font-weight: 600; margin-bottom: 0.5rem;">College</label>
                 <select name="college" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
                     <option value="">-- All Colleges --</option>
-                    @foreach($colleges as $college)
+                    @foreach($collegeNames as $college)
                         <option value="{{ $college }}" {{ request('college') === $college ? 'selected' : '' }}>
                             {{ $college }}
                         </option>
@@ -52,6 +52,9 @@
         </form>
     </div>
 
+    <!-- Include Enhanced Sex-Disaggregated Data Visualization Section -->
+    @include('partials.sex-disaggregated-data-visualization')
+
     <!-- Summary Statistics Cards -->
     @if($reports->count() > 0)
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
@@ -72,68 +75,172 @@
         </div>
     @endif
 
-    <!-- Reports Table -->
-    <div style="background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); overflow: hidden;">
-        <div style="padding: 1.5rem; border-bottom: 1px solid #eee;">
-            <h5 style="color: #333; margin: 0;">
-                <i class="fas fa-list"></i> Detailed Report
-            </h5>
+    <!-- Reports by College Section -->
+    @if($reports->count() > 0)
+        <div style="margin-bottom: 3rem;">
+            @foreach($collegeNames as $collegeName)
+                @if($reportsByCollege->has($collegeName))
+                    @php
+                        $collegeReports = $reportsByCollege[$collegeName];
+                        $maleCount = $collegeReports->where('gender', 'male')->count();
+                        $femaleCount = $collegeReports->where('gender', 'female')->count();
+                        $coordinator = $coordinators[$collegeName] ?? null;
+                    @endphp
+                    
+                    <div style="background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin-bottom: 2rem; overflow: hidden;">
+                        <!-- College Header -->
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem;">
+                            <h3 style="margin: 0 0 0.5rem 0; font-size: 1.4rem;">
+                                <i class="fas fa-university"></i> {{ $collegeName }}
+                            </h3>
+                        </div>
+
+                        <!-- College Stats and Coordinator -->
+                        <div style="padding: 1.5rem; border-bottom: 1px solid #eee;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                                <!-- Enrollment Statistics -->
+                                @if($enrollmentByCollege->has($collegeName))
+                                    @php $enrollment = $enrollmentByCollege[$collegeName]; @endphp
+                                    <div>
+                                        <h5 style="color: #333; font-weight: 600; margin-bottom: 1rem; font-size: 1rem;">
+                                            <i class="fas fa-graduation-cap"></i> Student Enrollment
+                                        </h5>
+                                        <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                                            <div style="flex: 1; padding: 1rem; background: #e3f2fd; border-radius: 6px; text-align: center;">
+                                                <p style="margin: 0; color: #1976d2; font-weight: 600; font-size: 0.9rem;">Male</p>
+                                                <p style="margin: 0.5rem 0 0 0; color: #1976d2; font-size: 1.8rem; font-weight: bold;">{{ number_format($enrollment['male_count']) }}</p>
+                                                <p style="margin: 0.25rem 0 0 0; color: #1976d2; font-size: 0.85rem;">{{ round($enrollment['male_percentage'], 1) }}%</p>
+                                            </div>
+                                            <div style="flex: 1; padding: 1rem; background: #fce4ec; border-radius: 6px; text-align: center;">
+                                                <p style="margin: 0; color: #c2185b; font-weight: 600; font-size: 0.9rem;">Female</p>
+                                                <p style="margin: 0.5rem 0 0 0; color: #c2185b; font-size: 1.8rem; font-weight: bold;">{{ number_format($enrollment['female_count']) }}</p>
+                                                <p style="margin: 0.25rem 0 0 0; color: #c2185b; font-size: 0.85rem;">{{ round($enrollment['female_percentage'], 1) }}%</p>
+                                            </div>
+                                        </div>
+                                        <div style="padding: 0.75rem; background: #f5f5f5; border-radius: 4px; text-align: center;">
+                                            <p style="margin: 0; color: #666; font-weight: 600; font-size: 0.9rem;">Total: <span style="font-size: 1.1rem;">{{ number_format($enrollment['total_count']) }}</span></p>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <!-- Gender Statistics -->
+                                <div>
+                                    <h5 style="color: #333; font-weight: 600; margin-bottom: 1rem; font-size: 1rem;">
+                                        <i class="fas fa-chart-pie"></i> Report Distribution
+                                    </h5>
+                                    <div style="display: flex; gap: 1rem;">
+                                        <div style="flex: 1; padding: 1rem; background: #e3f2fd; border-radius: 6px; text-align: center;">
+                                            <p style="margin: 0; color: #1976d2; font-weight: 600; font-size: 0.9rem;">Male</p>
+                                            <p style="margin: 0.5rem 0 0 0; color: #1976d2; font-size: 1.8rem; font-weight: bold;">{{ $maleCount }}</p>
+                                        </div>
+                                        <div style="flex: 1; padding: 1rem; background: #fce4ec; border-radius: 6px; text-align: center;">
+                                            <p style="margin: 0; color: #c2185b; font-weight: 600; font-size: 0.9rem;">Female</p>
+                                            <p style="margin: 0.5rem 0 0 0; color: #c2185b; font-size: 1.8rem; font-weight: bold;">{{ $femaleCount }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- GAD Coordinator -->
+                                <div>
+                                    <h5 style="color: #333; font-weight: 600; margin-bottom: 1rem; font-size: 1rem;">
+                                        <i class="fas fa-user-tie"></i> GAD Coordinator
+                                    </h5>
+                                    @if($coordinator && $coordinator->gadCoordinator)
+                                        @php $coord = $coordinator->gadCoordinator; @endphp
+                                        <div style="background: #f8f9ff; padding: 1rem; border-radius: 6px; border-left: 4px solid #667eea;">
+                                            <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                                                @if($coord->photo)
+                                                    <img src="{{ $coord->getPhotoUrl() }}" alt="{{ $coord->name }}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; flex-shrink: 0;">
+                                                @else
+                                                    <div style="width: 50px; height: 50px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                                        <i class="fas fa-user" style="color: #999; font-size: 1.5rem;"></i>
+                                                    </div>
+                                                @endif
+                                                <div style="flex-grow: 1; min-width: 0;">
+                                                    <p style="margin: 0 0 0.25rem 0; color: #333; font-weight: 600;">{{ $coord->name }}</p>
+                                                    @if($coord->email)
+                                                        <p style="margin: 0 0 0.25rem 0; color: #667eea; font-size: 0.9rem;">
+                                                            <a href="mailto:{{ $coord->email }}" style="color: #667eea; text-decoration: none;">
+                                                                <i class="fas fa-envelope"></i> {{ $coord->email }}
+                                                            </a>
+                                                        </p>
+                                                    @endif
+                                                    @if($coord->contact_number)
+                                                        <p style="margin: 0; color: #667eea; font-size: 0.9rem;">
+                                                            <a href="tel:{{ $coord->contact_number }}" style="color: #667eea; text-decoration: none;">
+                                                                <i class="fas fa-phone"></i> {{ $coord->contact_number }}
+                                                            </a>
+                                                        </p>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div style="background: #f5f5f5; padding: 1rem; border-radius: 6px; border-left: 4px solid #ccc; text-align: center;">
+                                            <p style="margin: 0; color: #999; font-size: 0.95rem;">
+                                                <i class="fas fa-info-circle"></i> No coordinator assigned
+                                            </p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detailed Reports for this College -->
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background-color: #f9f9f9; border-bottom: 1px solid #eee;">
+                                        <th style="padding: 1rem; text-align: left; color: #333; font-weight: 600;">Gender</th>
+                                        <th style="padding: 1rem; text-align: left; color: #333; font-weight: 600;">Title</th>
+                                        <th style="padding: 1rem; text-align: center; color: #333; font-weight: 600;">Year</th>
+                                        <th style="padding: 1rem; text-align: center; color: #333; font-weight: 600;">Participants</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($collegeReports as $report)
+                                        <tr style="border-bottom: 1px solid #eee; transition: background-color 0.3s ease;">
+                                            <td style="padding: 1rem;">
+                                                <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; {{ $report->gender === 'male' ? 'background-color: #e3f2fd; color: #1976d2;' : 'background-color: #fce4ec; color: #c2185b;' }}">
+                                                    {{ ucfirst($report->gender) }}
+                                                </span>
+                                            </td>
+                                            <td style="padding: 1rem; color: #333;">
+                                                <strong>{{ $report->title }}</strong><br>
+                                                <small style="color: #999;">{{ Str::limit($report->content, 60) }}</small>
+                                            </td>
+                                            <td style="padding: 1rem; text-align: center; color: #333;">{{ $report->year }}</td>
+                                            <td style="padding: 1rem; text-align: center;">
+                                                <span style="background-color: #f0f0f0; padding: 0.5rem 1rem; border-radius: 4px; color: #333; font-weight: 600;">
+                                                    {{ $report->participants_count }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                @endif
+            @endforeach
         </div>
 
-        @if($reports->count() > 0)
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="background-color: #f9f9f9; border-bottom: 2px solid #eee;">
-                            <th style="padding: 1rem; text-align: left; color: #333; font-weight: 600;">College</th>
-                            <th style="padding: 1rem; text-align: left; color: #333; font-weight: 600;">Gender</th>
-                            <th style="padding: 1rem; text-align: left; color: #333; font-weight: 600;">Title</th>
-                            <th style="padding: 1rem; text-align: center; color: #333; font-weight: 600;">Year</th>
-                            <th style="padding: 1rem; text-align: center; color: #333; font-weight: 600;">Participants</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($reports as $report)
-                            <tr style="border-bottom: 1px solid #eee; transition: background-color 0.3s ease;">
-                                <td style="padding: 1rem; color: #333;">{{ $report->college }}</td>
-                                <td style="padding: 1rem;">
-                                    <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; {{ $report->gender === 'male' ? 'background-color: #e3f2fd; color: #1976d2;' : 'background-color: #fce4ec; color: #c2185b;' }}">
-                                        {{ ucfirst($report->gender) }}
-                                    </span>
-                                </td>
-                                <td style="padding: 1rem; color: #333;">
-                                    <strong>{{ $report->title }}</strong><br>
-                                    <small style="color: #999;">{{ Str::limit($report->content, 60) }}</small>
-                                </td>
-                                <td style="padding: 1rem; text-align: center; color: #333;">{{ $report->year }}</td>
-                                <td style="padding: 1rem; text-align: center;">
-                                    <span style="background-color: #f0f0f0; padding: 0.5rem 1rem; border-radius: 4px; color: #333; font-weight: 600;">
-                                        {{ $report->participants_count }}
-                                    </span>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Pagination -->
-            @if($reports->hasPages())
-                <div style="padding: 1.5rem; text-align: center; border-top: 1px solid #eee;">
-                    {{ $reports->links('pagination::simple-bootstrap-4') }}
-                </div>
-            @endif
-        @else
-            <div style="padding: 2rem; text-align: center; color: #999;">
-                <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
-                No accomplishment reports found matching your filters.
+        <!-- Pagination -->
+        @if($reports->hasPages())
+            <div style="padding: 1.5rem; text-align: center; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                {{ $reports->links('pagination::simple-bootstrap-4') }}
             </div>
         @endif
-    </div>
+    @else
+        <div style="background: #fff; padding: 2rem; text-align: center; color: #999; border-radius: 8px;">
+            <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+            No accomplishment reports found matching your filters.
+        </div>
+    @endif
 </div>
 
 <style>
-    tr:hover {
+    table tbody tr:hover {
         background-color: #f9f9f9;
     }
 
@@ -146,6 +253,10 @@
             font-size: 1.5rem !important;
         }
 
+        h3 {
+            font-size: 1.1rem !important;
+        }
+
         div[style*="grid"] {
             grid-template-columns: 1fr !important;
         }
@@ -156,6 +267,12 @@
 
         td, th {
             padding: 0.75rem !important;
+        }
+
+        div[style*="display: flex; align-items: flex-start"] {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
     }
 </style>

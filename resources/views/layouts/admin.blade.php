@@ -146,7 +146,6 @@
                     <ul>
                         <li><a href="{{ route('admin.statistics.index') }}"><i class="fas fa-chart-pie"></i> Statistics</a></li>
                         <li><a href="{{ route('admin.banners.index') }}"><i class="fas fa-images"></i> Banners</a></li>
-                        <li><a href="{{ route('admin.accomplishment-reports.index') }}"><i class="fas fa-trophy"></i> Accomplishment Reports</a></li>
                         <li><a href="{{ route('admin.charts.index') }}"><i class="fas fa-chart-line"></i> Charts</a></li>
                         <li><a href="{{ route('admin.announcements.index') }}"><i class="fas fa-bullhorn"></i> Announcements</a></li>
                         <li><a href="{{ route('admin.organization-members.index') }}"><i class="fas fa-sitemap"></i> Organization Members</a></li>
@@ -156,6 +155,9 @@
 
                     <h3 style="margin-top: 2rem;"><i class="fas fa-heart"></i> GAD Modules</h3>
                     <ul>
+                        <li><a href="{{ route('admin.accomplishment-reports.index') }}"><i class="fas fa-trophy"></i> Accomplishment Reports</a></li>
+                        <li><a href="{{ route('admin.gad-plan-budgets.index') }}"><i class="fas fa-coins"></i> Plan & Budget</a></li>
+                        <li><a href="{{ route('admin.gad-coordinators.index') }}"><i class="fas fa-user-tie"></i> GAD Coordinators</a></li>
                         <li><a href="{{ route('admin.gad-submissions.index') }}"><i class="fas fa-file-alt"></i> GAD Submissions</a></li>
                         <li><a href="{{ route('admin.gad-agendas.index') }}"><i class="fas fa-calendar-alt"></i> GAD Agendas</a></li>
                         <li><a href="{{ route('admin.gad-guidelines.index') }}"><i class="fas fa-book"></i> GAD Guidelines</a></li>

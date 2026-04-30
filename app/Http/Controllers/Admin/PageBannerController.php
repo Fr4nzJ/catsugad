@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\PageBanner;
+use App\Traits\LogsActivityTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class PageBannerController extends Controller
 {
+    use LogsActivityTrait;
+
     public function index()
     {
         $banners = PageBanner::orderBy('created_at', 'desc')->paginate(10);
@@ -38,7 +41,8 @@ class PageBannerController extends Controller
             $validated['image_path'] = 'storage/' . $path;
         }
 
-        PageBanner::create($validated);
+        $banner = PageBanner::create($validated);
+        $this->logCreate($banner, $banner->name);
         return redirect()->route('admin.banners.index')->with('success', 'Banner created successfully!');
     }
 
@@ -49,6 +53,7 @@ class PageBannerController extends Controller
 
     public function update(Request $request, PageBanner $banner)
     {
+        $oldValues = $banner->getAttributes();
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
@@ -71,11 +76,13 @@ class PageBannerController extends Controller
         }
 
         $banner->update($validated);
+        $this->logUpdate($banner, $oldValues, $banner->name);
         return redirect()->route('admin.banners.index')->with('success', 'Banner updated successfully!');
     }
 
     public function destroy(PageBanner $banner)
     {
+        $this->logDelete($banner, $banner->name);
         // Delete the image file if it exists
         if ($banner->image_path && file_exists(public_path($banner->image_path))) {
             unlink(public_path($banner->image_path));

@@ -16,7 +16,7 @@
     @if ($announcements->count() > 0)
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
             @foreach ($announcements as $announcement)
-                <div class="card" style="box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; height: 100%; display: flex; flex-direction: column;">
+                <div class="card" style="box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; height: 100%; display: flex; flex-direction: column; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 16px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)'">
                     @if ($announcement->image_path)
                         <div style="width: 100%; height: 200px; overflow: hidden; background-color: #f0f0f0;">
                             <img src="{{ asset('storage/' . $announcement->image_path) }}" alt="{{ $announcement->title }}" style="width: 100%; height: 100%; object-fit: cover;">
@@ -29,9 +29,9 @@
                         </p>
                         <h3 style="margin: 0 0 1rem 0; font-size: 1.3rem; color: #333;">{{ $announcement->title }}</h3>
                         <p style="margin: 0 0 1.5rem 0; color: #666; font-size: 0.95rem; line-height: 1.6; flex-grow: 1;">
-                            {{ Str::limit($announcement->content, 120) }}
+                            {{ $announcement->excerpt ?? Str::limit(strip_tags($announcement->content), 150) }}
                         </p>
-                        <a href="{{ route('announcements.show', $announcement) }}" style="display: inline-block; color: #667eea; text-decoration: none; font-weight: 600; transition: color 0.3s ease;">
+                        <a href="{{ route('announcements.show', $announcement->slug) }}" style="display: inline-block; color: #667eea; text-decoration: none; font-weight: 600; transition: color 0.3s ease;">
                             Read More <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -48,6 +48,7 @@
             <p style="color: #999; font-size: 1.1rem;">No announcements available at this time.</p>
         </div>
     @endif
+
 </div>
 
 <style>

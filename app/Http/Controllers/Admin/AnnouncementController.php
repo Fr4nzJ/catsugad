@@ -3,14 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAnnouncementRequest;
 use App\Models\Announcement;
+use App\Traits\LogsActivityTrait;
 use Illuminate\Http\Request;
 
 class AnnouncementController extends Controller
 {
+    use LogsActivityTrait;
+
     public function index()
     {
-        $announcements = Announcement::orderBy('published_at', 'desc')->paginate(10);
+        $announcements = Announcement::latest('published_at')
+                                    ->latest('created_at')
+                                    ->paginate(10);
         return view('admin.announcements.index', compact('announcements'));
     }
 
@@ -19,23 +25,27 @@ class AnnouncementController extends Controller
         return view('admin.announcements.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreAnnouncementRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'published_at' => 'nullable|date',
-        ]);
+        $validated = $request->validated();
 
-        $data = $validated;
+        $data = [
+            'title' => $validated['title'],
+            'excerpt' => $validated['excerpt'] ?? null,
+            'content' => $validated['content'],
+            'status' => $validated['status'],
+            'published_at' => $validated['status'] === 'published' ? $validated['published_at'] : null,
+        ];
         
         if ($request->hasFile('image')) {
             $data['image_path'] = $request->file('image')->store('announcements', 'public');
         }
 
-        Announcement::create($data);
-        return redirect()->route('admin.announcements.index')->with('success', 'Announcement created successfully!');
+        $announcement = Announcement::create($data);
+        $this->logCreate($announcement, $announcement->title);
+        
+        return redirect()->route('admin.announcements.index')
+                       ->with('success', 'Announcement created successfully!');
     }
 
     public function edit(Announcement $announcement)
@@ -43,16 +53,18 @@ class AnnouncementController extends Controller
         return view('admin.announcements.edit', compact('announcement'));
     }
 
-    public function update(Request $request, Announcement $announcement)
+    public function update(StoreAnnouncementRequest $request, Announcement $announcement)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'published_at' => 'nullable|date',
-        ]);
+        $oldValues = $announcement->getAttributes();
+        $validated = $request->validated();
 
-        $data = $validated;
+        $data = [
+            'title' => $validated['title'],
+            'excerpt' => $validated['excerpt'] ?? null,
+            'content' => $validated['content'],
+            'status' => $validated['status'],
+            'published_at' => $validated['status'] === 'published' ? $validated['published_at'] : null,
+        ];
 
         if ($request->hasFile('image')) {
             if ($announcement->image_path) {
@@ -62,15 +74,21 @@ class AnnouncementController extends Controller
         }
 
         $announcement->update($data);
-        return redirect()->route('admin.announcements.index')->with('success', 'Announcement updated successfully!');
+        $this->logUpdate($announcement, $oldValues, $announcement->title);
+        
+        return redirect()->route('admin.announcements.index')
+                       ->with('success', 'Announcement updated successfully!');
     }
 
     public function destroy(Announcement $announcement)
     {
+        $this->logDelete($announcement, $announcement->title);
         if ($announcement->image_path) {
             \Storage::disk('public')->delete($announcement->image_path);
         }
         $announcement->delete();
-        return redirect()->route('admin.announcements.index')->with('success', 'Announcement deleted successfully!');
+        
+        return redirect()->route('admin.announcements.index')
+                       ->with('success', 'Announcement deleted successfully!');
     }
 }

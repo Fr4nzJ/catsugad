@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Statistic;
+use App\Traits\LogsActivityTrait;
 use Illuminate\Http\Request;
 
 class StatisticsController extends Controller
 {
+    use LogsActivityTrait;
+
     public function index()
     {
         $statistics = Statistic::orderBy('created_at', 'desc')->paginate(10);
@@ -29,7 +32,8 @@ class StatisticsController extends Controller
             'color' => 'required|string|in:blue,green,orange,red',
         ]);
 
-        Statistic::create($validated);
+        $statistic = Statistic::create($validated);
+        $this->logCreate($statistic, $statistic->label);
         return redirect()->route('admin.statistics.index')->with('success', 'Statistic created successfully!');
     }
 
@@ -40,6 +44,7 @@ class StatisticsController extends Controller
 
     public function update(Request $request, Statistic $statistic)
     {
+        $oldValues = $statistic->getAttributes();
         $validated = $request->validate([
             'value' => 'required|string',
             'label' => 'required|string',
@@ -49,11 +54,13 @@ class StatisticsController extends Controller
         ]);
 
         $statistic->update($validated);
+        $this->logUpdate($statistic, $oldValues, $statistic->label);
         return redirect()->route('admin.statistics.index')->with('success', 'Statistic updated successfully!');
     }
 
     public function destroy(Statistic $statistic)
     {
+        $this->logDelete($statistic, $statistic->label);
         $statistic->delete();
         return redirect()->route('admin.statistics.index')->with('success', 'Statistic deleted successfully!');
     }

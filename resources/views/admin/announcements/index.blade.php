@@ -17,9 +17,10 @@
             <thead>
                 <tr>
                     <th>Title</th>
+                    <th>Status</th>
                     <th>Published At</th>
                     <th>Image</th>
-                    <th>Content Preview</th>
+                    <th>Excerpt</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -27,7 +28,28 @@
                 @foreach ($announcements as $announcement)
                     <tr>
                         <td><strong>{{ $announcement->title }}</strong></td>
-                        <td>{{ $announcement->published_at?->format('M d, Y') ?? 'Not published' }}</td>
+                        <td>
+                            @if ($announcement->status === 'published' && $announcement->isPublished())
+                                <span class="tag is-success">
+                                    <i class="fas fa-check-circle"></i> Published
+                                </span>
+                            @elseif ($announcement->status === 'draft')
+                                <span class="tag is-warning">
+                                    <i class="fas fa-file"></i> Draft
+                                </span>
+                            @else
+                                <span class="tag is-light">
+                                    <i class="fas fa-clock"></i> Scheduled
+                                </span>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($announcement->published_at)
+                                <small>{{ $announcement->published_at->format('M d, Y H:i') }}</small>
+                            @else
+                                <small style="color: #ccc;">-</small>
+                            @endif
+                        </td>
                         <td>
                             @if ($announcement->image_path)
                                 <span class="tag is-info">
@@ -37,16 +59,18 @@
                                 <span style="color: #ccc;">-</span>
                             @endif
                         </td>
-                        <td>{{ Str::limit($announcement->content, 50) }}</td>
+                        <td>
+                            <small>{{ Str::limit($announcement->excerpt ?? $announcement->content, 40) }}</small>
+                        </td>
                         <td>
                             <div class="action-buttons">
-                                <a href="{{ route('admin.announcements.edit', $announcement) }}" class="button is-small is-info is-light">
+                                <a href="{{ route('admin.announcements.edit', $announcement) }}" class="button is-small is-info is-light" title="Edit">
                                     <span class="icon"><i class="fas fa-edit"></i></span>
                                 </a>
-                                <form method="POST" action="{{ route('admin.announcements.destroy', $announcement) }}" onsubmit="return confirm('Are you sure?')">
+                                <form method="POST" action="{{ route('admin.announcements.destroy', $announcement) }}" onsubmit="return confirm('Are you sure? This action cannot be undone.')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="button is-small is-danger is-light">
+                                    <button type="submit" class="button is-small is-danger is-light" title="Delete">
                                         <span class="icon"><i class="fas fa-trash"></i></span>
                                     </button>
                                 </form>

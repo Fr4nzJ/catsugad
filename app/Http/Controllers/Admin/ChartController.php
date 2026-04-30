@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Chart;
 use App\Models\AccomplishmentReport;
+use App\Traits\LogsActivityTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class ChartController extends Controller
 {
+    use LogsActivityTrait;
+
     public function index()
     {
         $charts = Chart::orderBy('order')->paginate(10);
@@ -32,7 +35,8 @@ class ChartController extends Controller
             'order' => 'integer',
         ]);
 
-        Chart::create($validated);
+        $chart = Chart::create($validated);
+        $this->logCreate($chart, $chart->name);
         return redirect()->route('admin.charts.index')->with('success', 'Chart created successfully');
     }
 
@@ -43,6 +47,7 @@ class ChartController extends Controller
 
     public function update(Request $request, Chart $chart)
     {
+        $oldValues = $chart->getAttributes();
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:growth,distribution',
@@ -53,11 +58,13 @@ class ChartController extends Controller
         ]);
 
         $chart->update($validated);
+        $this->logUpdate($chart, $oldValues, $chart->name);
         return redirect()->route('admin.charts.index')->with('success', 'Chart updated successfully');
     }
 
     public function destroy(Chart $chart)
     {
+        $this->logDelete($chart, $chart->name);
         $chart->delete();
         return redirect()->route('admin.charts.index')->with('success', 'Chart deleted successfully');
     }

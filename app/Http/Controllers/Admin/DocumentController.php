@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Document;
+use App\Traits\LogsActivityTrait;
 use Illuminate\Http\Request;
 
 class DocumentController extends Controller
 {
+    use LogsActivityTrait;
+
     public function index()
     {
         $documents = Document::orderBy('created_at', 'desc')->paginate(15);
@@ -38,7 +41,8 @@ class DocumentController extends Controller
             $data['file_path'] = $file->store('documents', 'public');
         }
 
-        Document::create($data);
+        $document = Document::create($data);
+        $this->logCreate($document, $document->title);
         return redirect()->route('admin.documents.index')->with('success', 'Document uploaded successfully!');
     }
 
@@ -50,6 +54,7 @@ class DocumentController extends Controller
 
     public function update(Request $request, Document $document)
     {
+        $oldValues = $document->getAttributes();
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -70,11 +75,13 @@ class DocumentController extends Controller
         }
 
         $document->update($data);
+        $this->logUpdate($document, $oldValues, $document->title);
         return redirect()->route('admin.documents.index')->with('success', 'Document updated successfully!');
     }
 
     public function destroy(Document $document)
     {
+        $this->logDelete($document, $document->title);
         if ($document->file_path) {
             \Storage::disk('public')->delete($document->file_path);
         }

@@ -196,10 +196,6 @@
                             <span class="icon"><i class="fas fa-file-alt"></i></span>
                             <span>Laws and Issuances</span>
                         </a>
-                        <a class="navbar-item" href="{{ route('about.gad-planning-budgeting') }}">
-                            <span class="icon"><i class="fas fa-chart-bar"></i></span>
-                            <span>Policy Imperatives for GAD Planning and Budgeting</span>
-                        </a>
                         <hr class="navbar-divider">
                         <a class="navbar-item" href="{{ route('about.definition-terms') }}">
                             <span class="icon"><i class="fas fa-book"></i></span>
@@ -228,13 +224,15 @@
                         </div>
                 </div>
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link {{ request()->routeIs('gad-plan-budget') ? 'is-active' : '' }}" href="{{ route('documents.index', ['category' => 'GAD Plan and Budget']) }}">
+                    <a class="navbar-link {{ request()->routeIs('gad-plan-budget', 'gad-plan-budgets.index') ? 'is-active' : '' }}" href="{{ route('gad-plan-budgets.index') }}">
                         <span class="icon-text">
-                            <span class="icon"><i class="fas fa-book"></i></span>
-                            <span>GAD Plan and Budget</span>
+                            <span class="icon"><i class="fas fa-coins"></i></span>
+                            <span>GAD Plans & Budgets</span>
                         </span>
                     </a>
                     <div class="navbar-dropdown">
+                        <!-- GAD Plan and Budget Documents Section -->
+                        <span style="padding: 0.5rem 1rem; display: block; color: #666; font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">Documents</span>
                         @forelse($navGadDocuments as $document)
                             <a class="navbar-item" href="{{ route('documents.download', $document) }}" target="_blank">
                                 <span class="icon"><i class="fas fa-file-pdf"></i></span>
@@ -246,10 +244,30 @@
                             </a>
                         @endforelse
                         <hr class="navbar-divider">
+                        <!-- View Options -->
                         <a class="navbar-item" href="{{ route('documents.index', ['category' => 'GAD Plan and Budget']) }}">
                             <span class="icon"><i class="fas fa-folder-open"></i></span>
                             <span>View All Documents</span>
                         </a>
+                        <a class="navbar-item" href="{{ route('gad-plan-budgets.index') }}">
+                            <span class="icon"><i class="fas fa-list"></i></span>
+                            <span>View All GAD Plans</span>
+                        </a>
+                        <!-- Admin Links -->
+                        @auth
+                            @if(auth()->user()->is_admin || auth()->user()->hasRole('admin'))
+                                <hr class="navbar-divider">
+                                <span style="padding: 0.5rem 1rem; display: block; color: #666; font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">Admin</span>
+                                <a class="navbar-item" href="{{ route('admin.documents.index') }}">
+                                    <span class="icon"><i class="fas fa-file-alt"></i></span>
+                                    <span>Manage Documents</span>
+                                </a>
+                                <a class="navbar-item" href="{{ route('admin.gad-plan-budgets.index') }}">
+                                    <span class="icon"><i class="fas fa-edit"></i></span>
+                                    <span>Manage GAD Plans</span>
+                                </a>
+                            @endif
+                        @endauth
                     </div>
                 </div>
                 <a class="navbar-item {{ request()->routeIs('news-announcements') ? 'is-active' : '' }}" href="{{ route('news-announcements') }}">

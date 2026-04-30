@@ -8,6 +8,9 @@ use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\OrganizationStructureController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GADPlanBudgetController;
+use App\Http\Controllers\EnrollmentDashboardController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\Admin\PageBannerController;
@@ -21,6 +24,8 @@ use App\Http\Controllers\Admin\GADSubmissionController;
 use App\Http\Controllers\Admin\GADAgendaController;
 use App\Http\Controllers\Admin\GADGuidelineController;
 use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\GADCoordinatorController;
+use App\Http\Controllers\Admin\GADPlanBudgetController as AdminGADPlanBudgetController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -72,6 +77,31 @@ Route::get('/announcements', [AnnouncementController::class, 'index'])->name('an
 Route::get('/announcements/{announcement}', [AnnouncementController::class, 'show'])->name('announcements.show');
 
 Route::get('/accomplishment-report', [AccomplishmentReportController::class, 'index'])->name('accomplishment-report');
+
+// Accomplishment Report AJAX endpoints for sex-disaggregated data
+Route::get('/api/accomplishment-report/college-chart-data', [AccomplishmentReportController::class, 'getCollegeChartData'])->name('accomplishment-report.college-chart-data');
+Route::get('/api/accomplishment-report/college-programs/{collegeId}', [AccomplishmentReportController::class, 'getCollegeProgramData'])->name('accomplishment-report.college-programs');
+Route::get('/api/accomplishment-report/university-summary', [AccomplishmentReportController::class, 'getUniversitySummaryData'])->name('accomplishment-report.university-summary');
+
+// GAD Plan & Budget Routes
+Route::get('/gad-plan-budgets', [GADPlanBudgetController::class, 'index'])->name('gad-plan-budgets.index');
+Route::get('/gad-plan-budgets/{gadPlanBudget}', [GADPlanBudgetController::class, 'show'])->name('gad-plan-budgets.show');
+
+// Dashboard Routes
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+Route::get('/dashboard/students-by-college', [DashboardController::class, 'getStudentsByCollege'])->name('dashboard.students-by-college');
+Route::get('/dashboard/students-by-program', [DashboardController::class, 'getStudentsByProgram'])->name('dashboard.students-by-program');
+Route::get('/dashboard/employee-stats', [DashboardController::class, 'getEmployeeStats'])->name('dashboard.employee-stats');
+Route::get('/dashboard/programs-by-college', [DashboardController::class, 'getProgramsByCollege'])->name('dashboard.programs-by-college');
+
+// Enrollment Dashboard Routes
+Route::prefix('enrollment')->group(function () {
+    Route::get('/', [EnrollmentDashboardController::class, 'index'])->name('enrollment.dashboard');
+    Route::get('/college/{id}', [EnrollmentDashboardController::class, 'getCollegeDetails'])->name('enrollment.college-detail');
+    Route::get('/chart-data', [EnrollmentDashboardController::class, 'getChartData'])->name('enrollment.chart-data');
+    Route::get('/export', [EnrollmentDashboardController::class, 'export'])->name('enrollment.export');
+    Route::get('/trends/{id}', [EnrollmentDashboardController::class, 'getTrends'])->name('enrollment.trends');
+});
 
 // Documents Routes
 Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
@@ -130,6 +160,12 @@ Route::prefix('admin')->group(function () {
         
         // GAD Guidelines CRUD (Policies & Memorandum)
         Route::resource('/gad-guidelines', GADGuidelineController::class, ['names' => 'admin.gad-guidelines']);
+        
+        // GAD Coordinators CRUD
+        Route::resource('/gad-coordinators', GADCoordinatorController::class, ['names' => 'admin.gad-coordinators']);
+
+        // GAD Plan & Budget CRUD
+        Route::resource('/gad-plan-budgets', AdminGADPlanBudgetController::class, ['names' => 'admin.gad-plan-budgets']);
         
         // Activity Logs - Admin Activity History
         Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('admin.activity-logs.index');

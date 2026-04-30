@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\OrganizationMember;
+use App\Traits\LogsActivityTrait;
 use Illuminate\Http\Request;
 
 class OrganizationMemberController extends Controller
 {
+    use LogsActivityTrait;
+
     public function index()
     {
         $members = OrganizationMember::orderBy('role_group')->orderBy('sort_order')->paginate(15);
@@ -37,7 +40,8 @@ class OrganizationMemberController extends Controller
             $data['image_path'] = $request->file('image')->store('organization-members', 'public');
         }
 
-        OrganizationMember::create($data);
+        $member = OrganizationMember::create($data);
+        $this->logCreate($member, $member->name);
         return redirect()->route('admin.organization-members.index')->with('success', 'Organization member added successfully!');
     }
 
@@ -49,6 +53,7 @@ class OrganizationMemberController extends Controller
 
     public function update(Request $request, OrganizationMember $organizationMember)
     {
+        $oldValues = $organizationMember->getAttributes();
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'position' => 'required|string|max:255',
@@ -68,11 +73,13 @@ class OrganizationMemberController extends Controller
         }
 
         $organizationMember->update($data);
+        $this->logUpdate($organizationMember, $oldValues, $organizationMember->name);
         return redirect()->route('admin.organization-members.index')->with('success', 'Organization member updated successfully!');
     }
 
     public function destroy(OrganizationMember $organizationMember)
     {
+        $this->logDelete($organizationMember, $organizationMember->name);
         if ($organizationMember->image_path) {
             \Storage::disk('public')->delete($organizationMember->image_path);
         }
