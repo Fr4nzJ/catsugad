@@ -156,6 +156,7 @@
                     <h3 style="margin-top: 2rem;"><i class="fas fa-heart"></i> GAD Modules</h3>
                     <ul>
                         <li><a href="{{ route('admin.accomplishment-reports.index') }}"><i class="fas fa-trophy"></i> Accomplishment Reports</a></li>
+                        <li><a href="{{ route('admin.staff.import') }}"><i class="fas fa-users"></i> Staff Data Import</a></li>
                         <li><a href="{{ route('admin.gad-plan-budgets.index') }}"><i class="fas fa-coins"></i> Plan & Budget</a></li>
                         <li><a href="{{ route('admin.gad-coordinators.index') }}"><i class="fas fa-user-tie"></i> GAD Coordinators</a></li>
                         <li><a href="{{ route('admin.gad-submissions.index') }}"><i class="fas fa-file-alt"></i> GAD Submissions</a></li>

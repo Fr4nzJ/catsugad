@@ -55,6 +55,11 @@
     <!-- Include Enhanced Sex-Disaggregated Data Visualization Section -->
     @include('partials.sex-disaggregated-data-visualization')
 
+    <!-- Include Enhanced Staff Sex-Disaggregated Data Visualization Section -->
+    @if(isset($staffTotalByGender) && ($staffTotalByGender['Male'] > 0 || $staffTotalByGender['Female'] > 0))
+        @include('partials.staff-sex-disaggregated-data-visualization')
+    @endif
+
     <!-- Summary Statistics Cards -->
     @if($reports->count() > 0)
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 3rem;">

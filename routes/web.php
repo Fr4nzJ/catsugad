@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\GADGuidelineController;
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\GADCoordinatorController;
 use App\Http\Controllers\Admin\GADPlanBudgetController as AdminGADPlanBudgetController;
+use App\Http\Controllers\Admin\StaffImportController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -173,5 +174,9 @@ Route::prefix('admin')->group(function () {
         Route::get('/activity-logs/{activityLog}', [ActivityLogController::class, 'show'])->name('admin.activity-logs.show');
         Route::post('/activity-logs/export', [ActivityLogController::class, 'export'])->name('admin.activity-logs.export');
         Route::post('/activity-logs/clear', [ActivityLogController::class, 'clearOldLogs'])->name('admin.activity-logs.clear');
+
+        // Staff Import (Sex-Disaggregated Data)
+        Route::get('/staff/import', [StaffImportController::class, 'index'])->name('admin.staff.import');
+        Route::post('/staff/import', [StaffImportController::class, 'import'])->name('admin.staff.import.post');
     });
 });

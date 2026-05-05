@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AccomplishmentReport;
 use App\Models\College;
+use App\Models\Staff;
 use App\Helpers\EnrollmentAggregator;
 use Illuminate\Http\Request;
 
@@ -41,10 +42,14 @@ class AccomplishmentReportController extends Controller
         $collegesWithPrograms = EnrollmentAggregator::getCollegesWithProgramsBreakdown('2025-2026', 'Second Semester');
         $enrollmentByCollege = $enrollmentData->keyBy('college_name');
 
+        // Get staff sex-disaggregated data
+        $staffTotalByGender = $this->getStaffTotalByGender();
+        $staffByOfficeAndGender = $this->getStaffByOfficeAndGender();
+
         // Group reports by college for display
         $reportsByCollege = $reports->groupBy('college');
 
-        return view('accomplishment-report', compact('reports', 'collegeNames', 'coordinators', 'reportsByCollege', 'enrollmentByCollege', 'enrollmentStats', 'enrollmentData', 'enrollmentSummary', 'collegesWithPrograms'));
+        return view('accomplishment-report', compact('reports', 'collegeNames', 'coordinators', 'reportsByCollege', 'enrollmentByCollege', 'enrollmentStats', 'enrollmentData', 'enrollmentSummary', 'collegesWithPrograms', 'staffTotalByGender', 'staffByOfficeAndGender'));
     }
 
     /**
@@ -144,6 +149,40 @@ class AccomplishmentReportController extends Controller
                 ]
             ]
         ]);
+    }
+
+    /**
+     * Get total staff counts by gender
+     */
+    private function getStaffTotalByGender(): array
+    {
+        return [
+            'Male' => Staff::where('gender', 'Male')->count(),
+            'Female' => Staff::where('gender', 'Female')->count(),
+            'Other' => Staff::where('gender', 'Other')->count(),
+        ];
+    }
+
+    /**
+     * Get staff counts grouped by office and gender
+     */
+    private function getStaffByOfficeAndGender(): array
+    {
+        $offices = Staff::distinct('office')->pluck('office')->sort()->values();
+
+        $result = [];
+
+        foreach ($offices as $office) {
+            $result[$office] = [
+                'Male' => Staff::where('office', $office)->where('gender', 'Male')->count(),
+                'Female' => Staff::where('office', $office)->where('gender', 'Female')->count(),
+                'Other' => Staff::where('office', $office)->where('gender', 'Other')->count(),
+            ];
+
+            $result[$office]['Total'] = array_sum($result[$office]);
+        }
+
+        return $result;
     }
 }
 
