@@ -77,7 +77,162 @@
         </div>
     </div>
 
-    <!-- C. COLLEGE-LEVEL BREAKDOWN -->
+    <!-- C. HIERARCHICAL DATA DISPLAY: CAMPUS → CATEGORY → COLLEGE -->
+    <div style="background: rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 2rem; margin-bottom: 2.5rem;">
+        <h3 style="margin-top: 0; margin-bottom: 2rem; font-size: 1.4rem;">
+            <i class="fas fa-sitemap"></i> Enrollment by Campus & Category
+        </h3>
+
+        @forelse($hierarchicalEnrollment as $campus)
+            <!-- CAMPUS SECTION -->
+            <div style="background: rgba(255, 255, 255, 0.08); border-left: 4px solid #FFD700; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+                <h4 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-map-marker-alt"></i> {{ $campus['campus'] }}
+                    <span style="font-size: 0.9rem; background: rgba(255, 255, 255, 0.2); padding: 0.3rem 0.8rem; border-radius: 20px;">
+                        {{ number_format($campus['total_students']) }} students
+                    </span>
+                </h4>
+
+                <!-- CATEGORY SUBSECTIONS -->
+                @forelse($campus['categories'] as $category)
+                    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 6px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                        <h5 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem; color: #FFD700;">
+                            <i class="fas fa-folder"></i> {{ $category['name'] }}
+                        </h5>
+
+                        @if($category['category'] === 'higher_education')
+                            <!-- COLLEGES (only shown for Higher Education) -->
+                            <div style="overflow-x: auto;">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem; margin-bottom: 1rem;">
+                                    <thead style="background: rgba(255, 255, 255, 0.1); border-bottom: 2px solid rgba(255, 255, 255, 0.2);">
+                                        <tr>
+                                            <th style="padding: 0.8rem; text-align: left;">College</th>
+                                            <th style="padding: 0.8rem; text-align: center;">Male</th>
+                                            <th style="padding: 0.8rem; text-align: center;">Female</th>
+                                            <th style="padding: 0.8rem; text-align: center;">Total</th>
+                                            <th style="padding: 0.8rem; text-align: center;">M %</th>
+                                            <th style="padding: 0.8rem; text-align: center;">F %</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($category['colleges'] as $college)
+                                            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); @if($loop->odd) background: rgba(255, 255, 255, 0.02); @endif">
+                                                <td style="padding: 0.8rem;">{{ $college['name'] }}</td>
+                                                <td style="padding: 0.8rem; text-align: center;">{{ number_format($college['male']) }}</td>
+                                                <td style="padding: 0.8rem; text-align: center;">{{ number_format($college['female']) }}</td>
+                                                <td style="padding: 0.8rem; text-align: center; font-weight: 600;">{{ number_format($college['total']) }}</td>
+                                                <td style="padding: 0.8rem; text-align: center;">{{ $college['male_percentage'] }}%</td>
+                                                <td style="padding: 0.8rem; text-align: center;">{{ $college['female_percentage'] }}%</td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="6" style="padding: 1rem; text-align: center; color: rgba(255, 255, 255, 0.6);">No colleges found</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Category Summary Stats -->
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                                <div style="text-align: center;">
+                                    <p style="color: rgba(255, 255, 255, 0.7); margin: 0 0 0.5rem 0; font-size: 0.9rem;">Total Male</p>
+                                    <h5 style="margin: 0; color: #5E72E4; font-size: 1.3rem;">{{ number_format($category['total_male']) }}</h5>
+                                </div>
+                                <div style="text-align: center;">
+                                    <p style="color: rgba(255, 255, 255, 0.7); margin: 0 0 0.5rem 0; font-size: 0.9rem;">Total Female</p>
+                                    <h5 style="margin: 0; color: #B8BED4; font-size: 1.3rem;">{{ number_format($category['total_female']) }}</h5>
+                                </div>
+                                <div style="text-align: center;">
+                                    <p style="color: rgba(255, 255, 255, 0.7); margin: 0 0 0.5rem 0; font-size: 0.9rem;">Category Total</p>
+                                    <h5 style="margin: 0; color: white; font-size: 1.3rem;">{{ number_format($category['total_students']) }}</h5>
+                                </div>
+                            </div>
+                        @else
+                            <!-- ADVANCED EDUCATION (summary only, not broken down by colleges) -->
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; padding: 1rem; background: rgba(255, 255, 255, 0.08); border-radius: 4px;">
+                                <div style="text-align: center;">
+                                    <p style="color: rgba(255, 255, 255, 0.7); margin: 0 0 0.5rem 0; font-size: 0.9rem;">Male</p>
+                                    <h5 style="margin: 0; color: #5E72E4; font-size: 1.3rem;">{{ number_format($category['total_male']) }}</h5>
+                                </div>
+                                <div style="text-align: center;">
+                                    <p style="color: rgba(255, 255, 255, 0.7); margin: 0 0 0.5rem 0; font-size: 0.9rem;">Female</p>
+                                    <h5 style="margin: 0; color: #B8BED4; font-size: 1.3rem;">{{ number_format($category['total_female']) }}</h5>
+                                </div>
+                                <div style="text-align: center;">
+                                    <p style="color: rgba(255, 255, 255, 0.7); margin: 0 0 0.5rem 0; font-size: 0.9rem;">Total</p>
+                                    <h5 style="margin: 0; color: white; font-size: 1.3rem;">{{ number_format($category['total_students']) }}</h5>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                @empty
+                    <p style="color: rgba(255, 255, 255, 0.6); margin: 0;">No categories found for this campus.</p>
+                @endforelse
+            </div>
+        @empty
+            <p style="color: rgba(255, 255, 255, 0.6);">No hierarchical enrollment data available.</p>
+        @endforelse
+    </div>
+
+    <!-- D. INSIGHTS SECTION (Higher Education Only) -->
+    @if($higherEducationInsights)
+        <div style="background: rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 2rem; margin-bottom: 2.5rem;">
+            <h3 style="margin-top: 0; margin-bottom: 2rem; font-size: 1.4rem;">
+                <i class="fas fa-lightbulb"></i> Higher Education Insights
+            </h3>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <!-- Highest Enrollment -->
+                @if($higherEducationInsights['highest_enrollment'])
+                    <div style="background: rgba(94, 114, 228, 0.2); border-left: 4px solid #5E72E4; border-radius: 8px; padding: 1.5rem;">
+                        <h5 style="margin-top: 0; margin-bottom: 1rem; color: #5E72E4; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-arrow-up"></i> Highest Enrollment
+                        </h5>
+                        <p style="margin: 0 0 0.5rem 0; font-size: 1.1rem; font-weight: 600; color: white;">
+                            {{ $higherEducationInsights['highest_enrollment']['name'] }}
+                        </p>
+                        <p style="margin: 0; color: rgba(255, 255, 255, 0.8); font-size: 0.95rem;">
+                            <strong>{{ number_format($higherEducationInsights['highest_enrollment']['total']) }}</strong> students
+                        </p>
+                    </div>
+                @endif
+
+                <!-- Lowest Enrollment -->
+                @if($higherEducationInsights['lowest_enrollment'])
+                    <div style="background: rgba(184, 190, 212, 0.2); border-left: 4px solid #B8BED4; border-radius: 8px; padding: 1.5rem;">
+                        <h5 style="margin-top: 0; margin-bottom: 1rem; color: #B8BED4; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-arrow-down"></i> Lowest Enrollment
+                        </h5>
+                        <p style="margin: 0 0 0.5rem 0; font-size: 1.1rem; font-weight: 600; color: white;">
+                            {{ $higherEducationInsights['lowest_enrollment']['name'] }}
+                        </p>
+                        <p style="margin: 0; color: rgba(255, 255, 255, 0.8); font-size: 0.95rem;">
+                            <strong>{{ number_format($higherEducationInsights['lowest_enrollment']['total']) }}</strong> students
+                        </p>
+                    </div>
+                @endif
+
+                <!-- Summary Stats -->
+                <div style="background: rgba(255, 215, 0, 0.15); border-left: 4px solid #FFD700; border-radius: 8px; padding: 1.5rem;">
+                    <h5 style="margin-top: 0; margin-bottom: 1rem; color: #FFD700; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-chart-bar"></i> Category Summary
+                    </h5>
+                    <p style="margin: 0.5rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.95rem;">
+                        <strong>{{ $higherEducationInsights['college_count'] }}</strong> Colleges
+                    </p>
+                    <p style="margin: 0.5rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.95rem;">
+                        <strong>{{ number_format($higherEducationInsights['total_students']) }}</strong> Total Students
+                    </p>
+                    <p style="margin: 0.5rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.95rem;">
+                        Male: <strong>{{ $higherEducationInsights['male_percentage'] }}%</strong> | Female: <strong>{{ $higherEducationInsights['female_percentage'] }}%</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- E. COLLEGE-LEVEL BREAKDOWN (LEGACY)
     <div style="background: rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 2rem;">
         <h3 style="margin-top: 0; margin-bottom: 2rem; font-size: 1.4rem;">
             <i class="fas fa-university"></i> College-Level Breakdown

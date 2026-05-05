@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('announcements', function (Blueprint $table) {
             // Add slug if not exists
             if (!Schema::hasColumn('announcements', 'slug')) {
-                $table->string('slug')->unique()->after('title');
+                $table->string('slug')->nullable()->unique()->after('title');
             }
             
             // Add excerpt if not exists

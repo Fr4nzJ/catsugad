@@ -6,6 +6,7 @@ use App\Models\AccomplishmentReport;
 use App\Models\College;
 use App\Models\Staff;
 use App\Helpers\EnrollmentAggregator;
+use App\Helpers\HierarchicalEnrollmentAggregator;
 use Illuminate\Http\Request;
 
 class AccomplishmentReportController extends Controller
@@ -35,7 +36,12 @@ class AccomplishmentReportController extends Controller
                               ->get()
                               ->keyBy('name');
 
-        // Get sex-disaggregated enrollment data
+        // Get sex-disaggregated enrollment data - HIERARCHICAL
+        $hierarchicalEnrollment = HierarchicalEnrollmentAggregator::getByHierarchy('2025-2026', 'Second Semester');
+        $higherEducationInsights = HierarchicalEnrollmentAggregator::getHigherEducationInsights('2025-2026', 'Second Semester');
+        $advancedEducationSummary = HierarchicalEnrollmentAggregator::getAdvancedEducationSummary('2025-2026', 'Second Semester');
+
+        // Keep old data for backward compatibility with views
         $enrollmentData = EnrollmentAggregator::getByCollege('2025-2026', 'Second Semester');
         $enrollmentStats = EnrollmentAggregator::getUniversityStats('2025-2026', 'Second Semester');
         $enrollmentSummary = EnrollmentAggregator::getSexDisaggregatedSummary('2025-2026', 'Second Semester');
@@ -49,7 +55,7 @@ class AccomplishmentReportController extends Controller
         // Group reports by college for display
         $reportsByCollege = $reports->groupBy('college');
 
-        return view('accomplishment-report', compact('reports', 'collegeNames', 'coordinators', 'reportsByCollege', 'enrollmentByCollege', 'enrollmentStats', 'enrollmentData', 'enrollmentSummary', 'collegesWithPrograms', 'staffTotalByGender', 'staffByOfficeAndGender'));
+        return view('accomplishment-report', compact('reports', 'collegeNames', 'coordinators', 'reportsByCollege', 'enrollmentByCollege', 'enrollmentStats', 'enrollmentData', 'enrollmentSummary', 'collegesWithPrograms', 'staffTotalByGender', 'staffByOfficeAndGender', 'hierarchicalEnrollment', 'higherEducationInsights', 'advancedEducationSummary'));
     }
 
     /**

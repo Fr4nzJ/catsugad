@@ -69,9 +69,8 @@ Route::get('/programs-services', function () {
 Route::get('/programs', [ProgramController::class, 'index'])->name('programs.index');
 Route::get('/programs/{program}', [ProgramController::class, 'show'])->name('programs.show');
 
-Route::get('/news-announcements', function () {
-    return view('news-announcements');
-})->name('news-announcements');
+// News/Announcements (alias for announcements)
+Route::get('/news-announcements', [AnnouncementController::class, 'index'])->name('news-announcements');
 
 // New Announcements Routes
 Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
