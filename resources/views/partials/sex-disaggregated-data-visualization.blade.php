@@ -137,11 +137,11 @@
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
                                 <div style="text-align: center;">
                                     <p style="color: rgba(255, 255, 255, 0.7); margin: 0 0 0.5rem 0; font-size: 0.9rem;">Total Male</p>
-                                    <h5 style="margin: 0; color: #5E72E4; font-size: 1.3rem;">{{ number_format($category['total_male']) }}</h5>
+                                    <h5 style="margin: 0; color: white; font-size: 1.3rem;">{{ number_format($category['total_male']) }}</h5>
                                 </div>
                                 <div style="text-align: center;">
                                     <p style="color: rgba(255, 255, 255, 0.7); margin: 0 0 0.5rem 0; font-size: 0.9rem;">Total Female</p>
-                                    <h5 style="margin: 0; color: #B8BED4; font-size: 1.3rem;">{{ number_format($category['total_female']) }}</h5>
+                                    <h5 style="margin: 0; color: white; font-size: 1.3rem;">{{ number_format($category['total_female']) }}</h5>
                                 </div>
                                 <div style="text-align: center;">
                                     <p style="color: rgba(255, 255, 255, 0.7); margin: 0 0 0.5rem 0; font-size: 0.9rem;">Category Total</p>
@@ -153,11 +153,11 @@
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; padding: 1rem; background: rgba(255, 255, 255, 0.08); border-radius: 4px;">
                                 <div style="text-align: center;">
                                     <p style="color: rgba(255, 255, 255, 0.7); margin: 0 0 0.5rem 0; font-size: 0.9rem;">Male</p>
-                                    <h5 style="margin: 0; color: #5E72E4; font-size: 1.3rem;">{{ number_format($category['total_male']) }}</h5>
+                                    <h5 style="margin: 0; color: white; font-size: 1.3rem;">{{ number_format($category['total_male']) }}</h5>
                                 </div>
                                 <div style="text-align: center;">
                                     <p style="color: rgba(255, 255, 255, 0.7); margin: 0 0 0.5rem 0; font-size: 0.9rem;">Female</p>
-                                    <h5 style="margin: 0; color: #B8BED4; font-size: 1.3rem;">{{ number_format($category['total_female']) }}</h5>
+                                    <h5 style="margin: 0; color: white; font-size: 1.3rem;">{{ number_format($category['total_female']) }}</h5>
                                 </div>
                                 <div style="text-align: center;">
                                     <p style="color: rgba(255, 255, 255, 0.7); margin: 0 0 0.5rem 0; font-size: 0.9rem;">Total</p>
@@ -186,7 +186,7 @@
                 <!-- Highest Enrollment -->
                 @if($higherEducationInsights['highest_enrollment'])
                     <div style="background: rgba(94, 114, 228, 0.2); border-left: 4px solid #5E72E4; border-radius: 8px; padding: 1.5rem;">
-                        <h5 style="margin-top: 0; margin-bottom: 1rem; color: #5E72E4; display: flex; align-items: center; gap: 0.5rem;">
+                        <h5 style="margin-top: 0; margin-bottom: 1rem; color: white; display: flex; align-items: center; gap: 0.5rem;">
                             <i class="fas fa-arrow-up"></i> Highest Enrollment
                         </h5>
                         <p style="margin: 0 0 0.5rem 0; font-size: 1.1rem; font-weight: 600; color: white;">
@@ -201,7 +201,7 @@
                 <!-- Lowest Enrollment -->
                 @if($higherEducationInsights['lowest_enrollment'])
                     <div style="background: rgba(184, 190, 212, 0.2); border-left: 4px solid #B8BED4; border-radius: 8px; padding: 1.5rem;">
-                        <h5 style="margin-top: 0; margin-bottom: 1rem; color: #B8BED4; display: flex; align-items: center; gap: 0.5rem;">
+                        <h5 style="margin-top: 0; margin-bottom: 1rem; color: white; display: flex; align-items: center; gap: 0.5rem;">
                             <i class="fas fa-arrow-down"></i> Lowest Enrollment
                         </h5>
                         <p style="margin: 0 0 0.5rem 0; font-size: 1.1rem; font-weight: 600; color: white;">

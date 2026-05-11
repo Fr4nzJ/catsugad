@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\GADCoordinatorController;
 use App\Http\Controllers\Admin\GADPlanBudgetController as AdminGADPlanBudgetController;
 use App\Http\Controllers\Admin\StaffImportController;
+use App\Http\Controllers\Admin\SeederController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -177,5 +178,11 @@ Route::prefix('admin')->group(function () {
         // Staff Import (Sex-Disaggregated Data)
         Route::get('/staff/import', [StaffImportController::class, 'index'])->name('admin.staff.import');
         Route::post('/staff/import', [StaffImportController::class, 'import'])->name('admin.staff.import.post');
+
+        // Seeder Management
+        Route::get('/seeders', [SeederController::class, 'index'])->name('admin.seeder.index');
+        Route::post('/seeders/run', [SeederController::class, 'runSeeder'])->name('admin.seeder.run');
+        Route::post('/seeders/wipe', [SeederController::class, 'wipeData'])->name('admin.seeder.wipe');
+        Route::get('/seeders/stats', [SeederController::class, 'getStats'])->name('admin.seeder.stats');
     });
 });

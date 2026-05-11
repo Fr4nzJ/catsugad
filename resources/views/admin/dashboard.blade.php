@@ -12,6 +12,12 @@
     <p style="color: #666; font-size: 1.1rem; margin-bottom: 3rem;">Select an option from the menu to manage content.</p>
     
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+        <a href="{{ route('admin.seeder.index') }}" style="text-decoration: none; padding: 2rem; background: #fff3cd; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; display: block; border-left: 4px solid #ffc107;">
+            <div style="font-size: 2rem; color: #ff6b6b; margin-bottom: 0.5rem;"><i class="fas fa-database"></i></div>
+            <div style="color: #333; font-weight: 600;">Seeder & Data Mgmt</div>
+            <div style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">Run seeders & wipe data</div>
+        </a>
+        
         <a href="{{ route('admin.statistics.index') }}" style="text-decoration: none; padding: 2rem; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; display: block;">
             <div style="font-size: 2rem; color: #667eea; margin-bottom: 0.5rem;"><i class="fas fa-chart-pie"></i></div>
             <div style="color: #333; font-weight: 600;">Statistics</div>
