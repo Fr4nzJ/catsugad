@@ -28,8 +28,21 @@ use App\Http\Controllers\Admin\GADCoordinatorController;
 use App\Http\Controllers\Admin\GADPlanBudgetController as AdminGADPlanBudgetController;
 use App\Http\Controllers\Admin\StaffImportController;
 use App\Http\Controllers\Admin\SeederController;
+use App\Http\Controllers\Admin\MapMarkerController;
+use Illuminate\Support\Facades\Storage;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Serve banner images from storage
+Route::get('/storage/images/banners/{filename}', function ($filename) {
+    $path = 'images/banners/' . $filename;
+    
+    if (!Storage::disk('public')->exists($path)) {
+        abort(404);
+    }
+    
+    return response()->file(Storage::disk('public')->path($path));
+})->name('banner.serve');
 
 Route::get('/about', function () {
     return view('about');
@@ -134,6 +147,9 @@ Route::prefix('admin')->group(function () {
         
         // Page Banners CRUD
         Route::resource('/banners', PageBannerController::class, ['names' => 'admin.banners']);
+        
+        // Map Markers CRUD
+        Route::resource('/map-markers', MapMarkerController::class, ['names' => 'admin.map-markers']);
         
         // Accomplishment Reports CRUD
         Route::resource('/accomplishment-reports', AdminAccomplishmentReportController::class, ['names' => 'admin.accomplishment-reports']);

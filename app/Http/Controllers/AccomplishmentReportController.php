@@ -174,19 +174,23 @@ class AccomplishmentReportController extends Controller
      */
     private function getStaffByOfficeAndGender(): array
     {
-        $offices = Staff::distinct('office')->pluck('office')->sort()->values();
+        // Get all staff grouped by office
+        $staffByOffice = Staff::all()->groupBy('office');
 
         $result = [];
 
-        foreach ($offices as $office) {
+        foreach ($staffByOffice as $office => $staffList) {
             $result[$office] = [
-                'Male' => Staff::where('office', $office)->where('gender', 'Male')->count(),
-                'Female' => Staff::where('office', $office)->where('gender', 'Female')->count(),
-                'Other' => Staff::where('office', $office)->where('gender', 'Other')->count(),
+                'Male' => $staffList->where('gender', 'Male')->count(),
+                'Female' => $staffList->where('gender', 'Female')->count(),
+                'Other' => $staffList->where('gender', 'Other')->count(),
             ];
 
             $result[$office]['Total'] = array_sum($result[$office]);
         }
+
+        // Sort by office name
+        ksort($result);
 
         return $result;
     }

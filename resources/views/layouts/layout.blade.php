@@ -136,8 +136,8 @@
             background-color: #ff41ad;
             color: #fff;
             text-align: center;
-            padding: 1rem 0;
-            height: 500px;
+            padding: 0.75rem 0;
+            height: auto;
              display: flex;
              align-items: center;
              justify-content: center;

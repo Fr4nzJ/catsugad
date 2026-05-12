@@ -280,15 +280,9 @@
         const previewContainer = document.getElementById('previewContainer');
         const previewImage = document.getElementById('previewImage');
 
-        // Click to upload
-        uploadLabel.addEventListener('click', () => {
-            imageInput.click();
-        });
-
-        // File selection preview
-        imageInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
+        // Function to handle file display
+        const handleFileSelect = (file) => {
+            if (file && file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     previewImage.src = event.target.result;
@@ -296,28 +290,47 @@
                 };
                 reader.readAsDataURL(file);
             }
+        };
+
+        // File selection preview
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                handleFileSelect(file);
+            }
         });
 
         // Drag and drop
         uploadLabel.addEventListener('dragover', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             uploadLabel.classList.add('drag-over');
         });
 
-        uploadLabel.addEventListener('dragleave', () => {
+        uploadLabel.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             uploadLabel.classList.remove('drag-over');
         });
 
         uploadLabel.addEventListener('drop', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             uploadLabel.classList.remove('drag-over');
             
             const files = e.dataTransfer.files;
             if (files.length > 0) {
-                imageInput.files = files;
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    previewImage.src = event.target.result;
+                // Create a DataTransfer object to set files
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(files[0]);
+                imageInput.files = dataTransfer.files;
+                
+                // Trigger change event
+                const event = new Event('change', { bubbles: true });
+                imageInput.dispatchEvent(event);
+            }
+        });
+    </script>
                     previewContainer.style.display = 'block';
                 };
                 reader.readAsDataURL(files[0]);

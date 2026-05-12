@@ -38,7 +38,8 @@ class PageBannerController extends Controller
             $file = $request->file('image');
             $filename = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
             $path = $file->storeAs('images/banners', $filename, 'public');
-            $validated['image_path'] = 'storage/' . $path;
+            // Store just the relative path from storage/app/public
+            $validated['image_path'] = $path;
         }
 
         $banner = PageBanner::create($validated);
@@ -65,14 +66,15 @@ class PageBannerController extends Controller
         // Handle file upload if a new image is provided
         if ($request->hasFile('image')) {
             // Delete old image if it exists
-            if ($banner->image_path && file_exists(public_path($banner->image_path))) {
-                unlink(public_path($banner->image_path));
+            if ($banner->image_path) {
+                Storage::disk('public')->delete($banner->image_path);
             }
 
             $file = $request->file('image');
             $filename = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
             $path = $file->storeAs('images/banners', $filename, 'public');
-            $validated['image_path'] = 'storage/' . $path;
+            // Store just the relative path from storage/app/public
+            $validated['image_path'] = $path;
         }
 
         $banner->update($validated);

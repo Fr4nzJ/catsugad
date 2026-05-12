@@ -32,7 +32,7 @@
 </div>
 <div class="main-banner">
     @if ($banner)
-        <img src="{{ asset($banner->image_path) }}" alt="{{ $banner->name }}">
+        <img src="{{ $banner->getImageUrl() }}" alt="{{ $banner->name }}">
     @else
         <img src="{{ asset('images/sliders/4ft x 11ft Streamer.png') }}" alt="Main Banner">
     @endif

@@ -43,7 +43,7 @@
                                                 <span class="badge">{{ ucfirst($banner->page) }}</span>
                                             </td>
                                             <td>
-                                                <img src="{{ asset($banner->image_path) }}" alt="{{ $banner->name }}" class="banner-preview">
+                                                <img src="{{ $banner->getImageUrl() }}" alt="{{ $banner->name }}" class="banner-preview">
                                             </td>
                                             <td>
                                                 @if ($banner->is_active)

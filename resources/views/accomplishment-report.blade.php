@@ -4,85 +4,106 @@
 
 @section('content')
 <div class="container" style="margin-top: 100px; padding: 2rem;">
-    <!-- Page Title -->
-    <div style="margin-bottom: 3rem;">
-        <h1 style="color: #333; font-size: 2rem; margin-bottom: 0.5rem;">
-            <i class="fas fa-chart-bar" style="color: #8f1eae;"></i> Accomplishment Reports
-        </h1>
-        <p style="color: #666; font-size: 1rem;">Gender and Development accomplishments segregated by college and gender</p>
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+            <!-- Page Title -->
+            <div style="margin-bottom: 3rem;">
+                <h1 style="color: #333; font-size: 2rem; margin-bottom: 0.5rem;">
+                    <i class="fas fa-chart-bar" style="color: #8f1eae;"></i> Accomplishment Reports
+                </h1>
+                <p style="color: #666; font-size: 1rem;">Gender and Development accomplishments segregated by college and gender</p>
+            </div>
+        </div>
     </div>
 
-    <!-- Filter Section -->
-    <div style="background-color: #fff; border-radius: 8px; padding: 2rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin-bottom: 3rem;">
-        <h5 style="color: #333; font-weight: 600; margin-bottom: 1.5rem;">
-            <i class="fas fa-filter"></i> Filter Reports
-        </h5>
-        <form method="GET" action="{{ route('accomplishment-report') }}" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
-            <div style="flex: 1; min-width: 250px;">
-                <label style="display: block; color: #333; font-weight: 600; margin-bottom: 0.5rem;">College</label>
-                <select name="college" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
-                    <option value="">-- All Colleges --</option>
-                    @foreach($collegeNames as $college)
-                        <option value="{{ $college }}" {{ request('college') === $college ? 'selected' : '' }}>
-                            {{ $college }}
-                        </option>
-                    @endforeach
-                </select>
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+            <!-- Filter and Results Section -->
+            <div style="background-color: #fff; border-radius: 8px; padding: 2rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin-bottom: 3rem;">
+                <div style="display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: flex-start;">
+            <!-- Filter Section -->
+            <div>
+                <h5 style="color: #333; font-weight: 600; margin-bottom: 1.5rem;">
+                    <i class="fas fa-filter"></i> Filter Reports
+                </h5>
+                <form method="GET" action="{{ route('accomplishment-report') }}" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <label style="display: block; color: #333; font-weight: 600; margin-bottom: 0.5rem;">College</label>
+                        <select name="college" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+                            <option value="">-- All Colleges --</option>
+                            @foreach($collegeNames as $college)
+                                <option value="{{ $college }}" {{ request('college') === $college ? 'selected' : '' }}>
+                                    {{ $college }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div style="flex: 1; min-width: 250px;">
+                        <label style="display: block; color: #333; font-weight: 600; margin-bottom: 0.5rem;">Gender</label>
+                        <select name="gender" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+                            <option value="">-- All Genders --</option>
+                            <option value="male" {{ request('gender') === 'male' ? 'selected' : '' }}>Male</option>
+                            <option value="female" {{ request('gender') === 'female' ? 'selected' : '' }}>Female</option>
+                        </select>
+                    </div>
+
+                    <div style="flex: 1; min-width: 200px; display: flex; gap: 0.5rem;">
+                        <button type="submit" style="flex: 1; background: linear-gradient(to right, #ff0191, rgb(0, 64, 255)); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; font-weight: 600; cursor: pointer;">
+                            <i class="fas fa-search"></i> Filter
+                        </button>
+                        @if(request('college') || request('gender'))
+                            <a href="{{ route('accomplishment-report') }}" style="flex: 1; background-color: #f5f5f5; color: #333; border: 1px solid #ddd; padding: 0.75rem 1.5rem; border-radius: 4px; font-weight: 600; text-decoration: none; text-align: center;">
+                                <i class="fas fa-refresh"></i> Clear
+                            </a>
+                        @endif
+                    </div>
+                </form>
             </div>
 
-            <div style="flex: 1; min-width: 250px;">
-                <label style="display: block; color: #333; font-weight: 600; margin-bottom: 0.5rem;">Gender</label>
-                <select name="gender" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
-                    <option value="">-- All Genders --</option>
-                    <option value="male" {{ request('gender') === 'male' ? 'selected' : '' }}>Male</option>
-                    <option value="female" {{ request('gender') === 'female' ? 'selected' : '' }}>Female</option>
-                </select>
-            </div>
+            <!-- Summary Statistics Cards (Results) -->
+            @if($reports->count() > 0)
+                <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; min-width: 350px;">
+                    <div style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); text-align: center; color: white;">
+                        <h6 style="color: rgba(255,255,255,0.9); font-size: 0.85rem; margin-bottom: 0.5rem;">Total Reports</h6>
+                        <h3 style="color: white; font-size: 2rem; margin: 0;">{{ $reports->total() }}</h3>
+                    </div>
 
-            <div style="flex: 1; min-width: 200px; display: flex; gap: 0.5rem;">
-                <button type="submit" style="flex: 1; background: linear-gradient(to right, #ff0191, rgb(0, 64, 255)); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; font-weight: 600; cursor: pointer;">
-                    <i class="fas fa-search"></i> Filter
-                </button>
-                @if(request('college') || request('gender'))
-                    <a href="{{ route('accomplishment-report') }}" style="flex: 1; background-color: #f5f5f5; color: #333; border: 1px solid #ddd; padding: 0.75rem 1.5rem; border-radius: 4px; font-weight: 600; text-decoration: none; text-align: center;">
-                        <i class="fas fa-refresh"></i> Clear
-                    </a>
-                @endif
-            </div>
-        </form>
+                    <div style="background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); text-align: center; color: white;">
+                        <h6 style="color: rgba(255,255,255,0.9); font-size: 0.85rem; margin-bottom: 0.5rem;">Total Participants</h6>
+                        <h3 style="color: white; font-size: 2rem; margin: 0;">{{ $reports->sum('participants_count') }}</h3>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); text-align: center; color: white;">
+                        <h6 style="color: rgba(255,255,255,0.9); font-size: 0.85rem; margin-bottom: 0.5rem;">Showing</h6>
+                        <h3 style="color: white; font-size: 2rem; margin: 0;">{{ $reports->count() }}</h3>
+                    </div>
+                </div>
+            @endif
+        </div>
     </div>
+
 
     <!-- Include Enhanced Sex-Disaggregated Data Visualization Section -->
-    @include('partials.sex-disaggregated-data-visualization')
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+            @include('partials.sex-disaggregated-data-visualization')
+        </div>
+    </div>
 
     <!-- Include Enhanced Staff Sex-Disaggregated Data Visualization Section -->
     @if(isset($staffTotalByGender) && ($staffTotalByGender['Male'] > 0 || $staffTotalByGender['Female'] > 0))
-        @include('partials.staff-sex-disaggregated-data-visualization')
-    @endif
-
-    <!-- Summary Statistics Cards -->
-    @if($reports->count() > 0)
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
-            <div style="background: #fff; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); text-align: center; border-top: 4px solid #3498db;">
-                <h6 style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">Total Reports</h6>
-                <h3 style="color: #333; font-size: 2.5rem; margin: 0;">{{ $reports->total() }}</h3>
-            </div>
-
-            <div style="background: #fff; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); text-align: center; border-top: 4px solid #3498db;">
-                <h6 style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">Total Participants</h6>
-                <h3 style="color: #333; font-size: 2.5rem; margin: 0;">{{ $reports->sum('participants_count') }}</h3>
-            </div>
-
-            <div style="background: #fff; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); text-align: center; border-top: 4px solid #2ecc71;">
-                <h6 style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">Showing</h6>
-                <h3 style="color: #333; font-size: 2.5rem; margin: 0;">{{ $reports->count() }}</h3>
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-9">
+                @include('partials.staff-sex-disaggregated-data-visualization')
             </div>
         </div>
     @endif
 
     <!-- Reports by College Section -->
     @if($reports->count() > 0)
-        <div style="margin-bottom: 3rem;">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-9" style="margin-bottom: 3rem;">
             @foreach($collegeNames as $collegeName)
                 @if($reportsByCollege->has($collegeName))
                     @php
@@ -192,31 +213,31 @@
                         </div>
 
                         <!-- Detailed Reports for this College -->
-                        <div style="overflow-x: auto;">
-                            <table style="width: 100%; border-collapse: collapse;">
+                        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                            <table style="width: 100%; border-collapse: collapse; min-width: 600px;">
                                 <thead>
                                     <tr style="background-color: #f9f9f9; border-bottom: 1px solid #eee;">
-                                        <th style="padding: 1rem; text-align: left; color: #333; font-weight: 600;">Gender</th>
-                                        <th style="padding: 1rem; text-align: left; color: #333; font-weight: 600;">Title</th>
-                                        <th style="padding: 1rem; text-align: center; color: #333; font-weight: 600;">Year</th>
-                                        <th style="padding: 1rem; text-align: center; color: #333; font-weight: 600;">Participants</th>
+                                        <th style="padding: 1rem; text-align: left; color: #333; font-weight: 600; width: 100px;">Gender</th>
+                                        <th style="padding: 1rem; text-align: left; color: #333; font-weight: 600; width: auto; min-width: 400px;">Title</th>
+                                        <th style="padding: 1rem; text-align: center; color: #333; font-weight: 600; width: 80px;">Year</th>
+                                        <th style="padding: 1rem; text-align: center; color: #333; font-weight: 600; width: 120px;">Participants</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($collegeReports as $report)
                                         <tr style="border-bottom: 1px solid #eee; transition: background-color 0.3s ease;">
-                                            <td style="padding: 1rem;">
-                                                <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; {{ $report->gender === 'male' ? 'background-color: #e3f2fd; color: #1976d2;' : 'background-color: #fce4ec; color: #c2185b;' }}">
+                                            <td style="padding: 1rem; vertical-align: top;">
+                                                <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; white-space: nowrap; {{ $report->gender === 'male' ? 'background-color: #e3f2fd; color: #1976d2;' : 'background-color: #fce4ec; color: #c2185b;' }}">
                                                     {{ ucfirst($report->gender) }}
                                                 </span>
                                             </td>
-                                            <td style="padding: 1rem; color: #333;">
+                                            <td style="padding: 1rem; color: #333; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
                                                 <strong>{{ $report->title }}</strong><br>
-                                                <small style="color: #999;">{{ Str::limit($report->content, 60) }}</small>
+                                                <small style="color: #999; display: block; margin-top: 0.25rem;">{{ Str::limit($report->content, 100) }}</small>
                                             </td>
-                                            <td style="padding: 1rem; text-align: center; color: #333;">{{ $report->year }}</td>
-                                            <td style="padding: 1rem; text-align: center;">
-                                                <span style="background-color: #f0f0f0; padding: 0.5rem 1rem; border-radius: 4px; color: #333; font-weight: 600;">
+                                            <td style="padding: 1rem; text-align: center; color: #333; vertical-align: top; white-space: nowrap;">{{ $report->year }}</td>
+                                            <td style="padding: 1rem; text-align: center; vertical-align: top;">
+                                                <span style="background-color: #f0f0f0; padding: 0.5rem 1rem; border-radius: 4px; color: #333; font-weight: 600; display: inline-block;">
                                                     {{ $report->participants_count }}
                                                 </span>
                                             </td>
@@ -232,14 +253,22 @@
 
         <!-- Pagination -->
         @if($reports->hasPages())
-            <div style="padding: 1.5rem; text-align: center; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                {{ $reports->links('pagination::simple-bootstrap-4') }}
+            <div class="row justify-content-center">
+                <div class="col-lg-10 col-xl-9">
+                    <div style="padding: 1.5rem; text-align: center; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        {{ $reports->appends(request()->query())->links('pagination::simple-bootstrap-4') }}
+                    </div>
+                </div>
             </div>
         @endif
     @else
-        <div style="background: #fff; padding: 2rem; text-align: center; color: #999; border-radius: 8px;">
-            <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
-            No accomplishment reports found matching your filters.
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-9">
+                <div style="background: #fff; padding: 2rem; text-align: center; color: #999; border-radius: 8px;">
+                    <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                    No accomplishment reports found matching your filters.
+                </div>
+            </div>
         </div>
     @endif
 </div>
@@ -247,6 +276,16 @@
 <style>
     table tbody tr:hover {
         background-color: #f9f9f9;
+    }
+
+    @media (max-width: 1024px) {
+        div[style*="display: grid; grid-template-columns: 1fr auto"] {
+            grid-template-columns: 1fr !important;
+        }
+        
+        div[style*="min-width: 350px"] {
+            min-width: 100% !important;
+        }
     }
 
     @media (max-width: 768px) {

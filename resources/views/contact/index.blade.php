@@ -39,16 +39,6 @@
                     <p style="margin: 0;"><a href="mailto:{{ $contactInfo['email'] }}" style="color: #667eea; text-decoration: none; font-weight: 500;">{{ $contactInfo['email'] }}</a></p>
                 </div>
 
-                <!-- Phone -->
-                <div style="margin-bottom: 1.5rem;">
-                    <h3 style="margin: 0 0 0.5rem 0; color: #333; font-size: 1rem; font-weight: 600;">
-                        <i class="fas fa-phone" style="color: #667eea; margin-right: 0.5rem;"></i>
-                        Phone
-                    </h3>
-                    <p style="margin: 0 0 0.3rem 0;"><a href="tel:{{ str_replace(' ', '', str_replace('-', '', $contactInfo['phone'])) }}" style="color: #667eea; text-decoration: none; font-weight: 500;">{{ $contactInfo['phone'] }}</a></p>
-                    <p style="margin: 0;"><a href="tel:{{ str_replace(' ', '', $contactInfo['mobile']) }}" style="color: #667eea; text-decoration: none; font-weight: 500;">{{ $contactInfo['mobile'] }}</a></p>
-                </div>
-
                 <!-- Office Hours -->
                 <div style="margin-bottom: 1.5rem;">
                     <h3 style="margin: 0 0 0.5rem 0; color: #333; font-size: 1rem; font-weight: 600;">
@@ -103,6 +93,15 @@
         </div>
     </div>
 
+    <!-- Map Section -->
+    <div style="margin-bottom: 4rem;">
+        <h2 style="font-size: 1.8rem; color: #333; margin-bottom: 1.5rem; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">
+            <i class="fas fa-map"></i> Find Us on the Map
+        </h2>
+        
+        <div id="map" style="width: 100%; height: 400px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"></div>
+    </div>
+
     <!-- Locations Section -->
     @if (!empty($contactInfo['locations']))
         <h2 style="font-size: 1.8rem; color: #333; margin-bottom: 2rem; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">
@@ -117,11 +116,6 @@
                     <p style="margin: 0.75rem 0; color: #666;">
                         <i class="fas fa-map-marker-alt" style="color: #667eea; margin-right: 0.5rem;"></i>
                         {{ $location['address'] }}
-                    </p>
-
-                    <p style="margin: 0.75rem 0; color: #666;">
-                        <i class="fas fa-phone" style="color: #667eea; margin-right: 0.5rem;"></i>
-                        <a href="tel:{{ str_replace(' ', '', str_replace('-', '', $location['phone'])) }}" style="color: #667eea; text-decoration: none;">{{ $location['phone'] }}</a>
                     </p>
 
                     <p style="margin: 0.75rem 0; color: #666;">
@@ -149,4 +143,44 @@
         }
     }
 </style>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+
+<!-- Leaflet JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<script>
+    // Initialize the map
+    const map = L.map('map').setView([{{ $marker->latitude ?? 13.7942 }}, {{ $marker->longitude ?? 124.4387 }}], 10);
+    
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19
+    }).addTo(map);
+    
+    // Add marker for the office location
+    @if($marker)
+        L.marker([{{ $marker->latitude }}, {{ $marker->longitude }}])
+            .addTo(map)
+            .bindPopup(`
+                <div style="font-family: Arial, sans-serif; width: 250px;">
+                    <h4 style="margin: 0 0 0.5rem 0; color: #667eea;">{{ $marker->name }}</h4>
+                    <p style="margin: 0.3rem 0; color: #666;"><strong>Location:</strong> {{ $marker->name }}</p>
+                    <p style="margin: 0.3rem 0; color: #666;"><strong>Address:</strong> {{ $contactInfo['office_address'] }}</p>
+                    <p style="margin: 0.3rem 0; color: #666;"><strong>Hours:</strong> {{ $contactInfo['office_hours'] }}</p>
+                    @if($marker->description)
+                        <p style="margin: 0.3rem 0; color: #666;"><strong>Description:</strong> {{ $marker->description }}</p>
+                    @endif
+                    <p style="margin: 0.5rem 0 0 0; color: #667eea;"><a href="mailto:{{ $contactInfo['email'] }}" style="color: #667eea; text-decoration: none;">{{ $contactInfo['email'] }}</a></p>
+                </div>
+            `)
+            .openPopup();
+            
+        // Center the map on the marker
+        map.setView([{{ $marker->latitude }}, {{ $marker->longitude }}], 16);
+    @endif
+</script>
+
 @endsection

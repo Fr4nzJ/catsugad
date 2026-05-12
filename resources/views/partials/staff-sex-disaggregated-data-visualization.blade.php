@@ -72,19 +72,7 @@
             <i class="fas fa-sliders-h"></i> Visualization Type
         </h4>
         <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-            <button class="staff-chart-type-btn" data-type="bar" style="background: #4C6EF5; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 600;">
-                <i class="fas fa-chart-bar"></i> Bar Chart
-            </button>
-            <button class="staff-chart-type-btn" data-type="line" style="background: rgba(255, 255, 255, 0.2); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 600;">
-                <i class="fas fa-chart-line"></i> Line Graph
-            </button>
-            <button class="staff-chart-type-btn" data-type="pie" style="background: rgba(255, 255, 255, 0.2); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 600;">
-                <i class="fas fa-chart-pie"></i> Pie Chart
-            </button>
-            <button class="staff-chart-type-btn" data-type="doughnut" style="background: rgba(255, 255, 255, 0.2); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 600;">
-                <i class="fas fa-ring"></i> Doughnut
-            </button>
-            <button class="staff-chart-type-btn" data-type="table" style="background: rgba(255, 255, 255, 0.2); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 600;">
+            <button class="staff-chart-type-btn" data-type="table" style="background: #4C6EF5; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 600;">
                 <i class="fas fa-table"></i> Table View
             </button>
         </div>
@@ -99,10 +87,10 @@
         <!-- Office Chart Container -->
         <div style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
             <div id="staffOfficeChartContainer">
-                <canvas id="staffOfficeChart" style="max-height: 400px;"></canvas>
+                <canvas id="staffOfficeChart" style="max-height: 400px; display: block; margin: 0 auto;"></canvas>
             </div>
-            <div id="staffOfficeTableContainer" style="display: none; overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; color: white;">
+            <div id="staffOfficeTableContainer" style="display: none; overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                <table style="width: 100%; border-collapse: collapse; color: white; table-layout: auto;">
                     <thead>
                         <tr style="background: rgba(255, 255, 255, 0.1); border-bottom: 2px solid rgba(255, 255, 255, 0.2);">
                             <th style="padding: 1rem; text-align: left;">Office</th>
@@ -296,6 +284,9 @@ document.querySelectorAll('.staff-chart-type-btn').forEach(btn => {
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     initStaffUniversityChart();
-    initStaffOfficeChart('bar');
+    // Show table view by default, hide chart
+    document.getElementById('staffOfficeChartContainer').style.display = 'none';
+    document.getElementById('staffOfficeTableContainer').style.display = 'block';
 });
+</script>
 </script>

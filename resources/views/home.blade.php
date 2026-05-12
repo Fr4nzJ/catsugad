@@ -121,7 +121,7 @@
         <h1>Empowering Communities Through Gender Equality</h1>
         <p class="subtitle">Building Inclusive Communities for Sustainable Development</p>
         <div class="buttons is-centered mt-6">
-            <a class="hero-button-programs" href="{{ route('programs-services') }}">
+            <a class="hero-button-programs" href="{{ route('programs.index') }}">
                 <span class="icon"><i class="fas fa-chart-bar"></i></span>
                 <span>Our Programs</span>
             </a>
@@ -133,7 +133,7 @@
     </div>
     <div class="main-banner">
         @if ($banner)
-            <img src="{{ asset($banner->image_path) }}" alt="{{ $banner->name }}">
+            <img src="{{ $banner->getImageUrl() }}" alt="{{ $banner->name }}">
         @else
             <img src="{{ asset('images/sliders/4ft x 11ft Streamer.png') }}" alt="Main Banner">
         @endif
@@ -387,7 +387,7 @@
                                 @if($program->target_beneficiaries)
                                     <p style="color: #999; font-size: 0.85rem; margin: 0.5rem 0;"><i class="fas fa-users"></i> {{ $program->target_beneficiaries }}</p>
                                 @endif
-                                <a href="{{ route('programs-services') }}" style="color: #3498db; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem;">
+                                <a href="{{ route('programs.index') }}" style="color: #3498db; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem;">
                                     Learn More <i class="fas fa-arrow-right"></i>
                                 </a>
                             </div>
@@ -395,7 +395,7 @@
                     @endforeach
                 </div>
                 <div style="text-align: center; margin-top: 2rem;">
-                    <a href="{{ route('programs-services') }}" style="background: linear-gradient(to right, #3498db, #2980b9); color: white; padding: 0.75rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 600; display: inline-block;">
+                    <a href="{{ route('programs.index') }}" style="background: linear-gradient(to right, #3498db, #2980b9); color: white; padding: 0.75rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 600; display: inline-block;">
                         View All Programs <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
                     </a>
                 </div>
