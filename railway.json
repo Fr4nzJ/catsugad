@@ -5,7 +5,7 @@
   },
   "deploy": {
     "numReplicas": 1,
-    "startCommand": "vendor/bin/heroku-php-apache2 public/",
+    "startCommand": "apache2-foreground",
     "restartPolicyMaxRetries": 10
   }
 }
