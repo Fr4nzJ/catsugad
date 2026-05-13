@@ -1,1 +1,1 @@
-web: apache2-foreground
+web: php artisan migrate --force && php artisan db:seed --force && apache2-foreground
