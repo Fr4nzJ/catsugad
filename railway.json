@@ -5,7 +5,7 @@
   },
   "deploy": {
     "numReplicas": 1,
-    "startCommand": "./docker-entrypoint.sh",
+    "startCommand": "bash docker-entrypoint.sh",
     "restartPolicyMaxRetries": 10
   }
 }
