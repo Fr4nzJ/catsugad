@@ -23,6 +23,9 @@ RUN apt-get update && apt-get install -y \
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
+# Disable conflicting MPMs and ensure only prefork is loaded
+RUN a2dismod mpm_event mpm_worker || true && a2enmod mpm_prefork
+
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
