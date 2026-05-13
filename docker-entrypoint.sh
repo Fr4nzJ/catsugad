@@ -9,6 +9,11 @@ NC='\033[0m' # No Color
 
 echo -e "${YELLOW}=== CatSU GAD Application Startup ===${NC}"
 
+# Create database if it doesn't exist
+echo -e "${YELLOW}Ensuring database exists...${NC}"
+mysql -h "$DB_HOST" -u "$DB_USERNAME" -p"$DB_PASSWORD" -e "CREATE DATABASE IF NOT EXISTS $DB_DATABASE CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" 2>/dev/null || true
+echo -e "${GREEN}Database setup checked${NC}"
+
 # Wait for database to be available
 echo -e "${YELLOW}Waiting for MySQL to be ready...${NC}"
 MAX_ATTEMPTS=30
@@ -45,4 +50,4 @@ else
 fi
 
 echo -e "${GREEN}Starting Apache web server...${NC}"
-exec apache2-foreground
+exec apache2 -D FOREGROUND
