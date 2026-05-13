@@ -23,10 +23,10 @@ RUN apt-get update && apt-get install -y \
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Remove all conflicting MPM modules from mods-enabled and enable only prefork
-RUN rm -f /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.conf && \
-    ln -s /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load && \
-    ln -s /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf
+# Fix Apache MPM conflict: disable all MPMs, then enable only prefork
+RUN a2dismod mpm_event mpm_worker mpm_prefork 2>/dev/null || true && \
+    a2enmod mpm_prefork && \
+    apache2ctl -M 2>&1 | grep mpm
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
