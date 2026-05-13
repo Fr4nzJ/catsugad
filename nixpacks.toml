@@ -1,0 +1,8 @@
+[phases.setup]
+node = "22.5.1"
+
+[phases.build]
+cmds = [
+  "npm ci --prefer-offline --no-audit",
+  "npm run build"
+]
