@@ -5,7 +5,7 @@
   },
   "deploy": {
     "numReplicas": 1,
-    "startCommand": "apache2-foreground",
+    "startCommand": "./docker-entrypoint.sh",
     "restartPolicyMaxRetries": 10
   }
 }
