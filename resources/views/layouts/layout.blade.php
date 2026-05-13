@@ -188,10 +188,6 @@
                             <span class="icon"><i class="fas fa-history"></i></span>
                             <span>Background</span>
                         </a>
-                        <a class="navbar-item" href="{{ route('about.organizational-chart') }}">
-                            <span class="icon"><i class="fas fa-sitemap"></i></span>
-                            <span>Organizational Chart</span>
-                        </a>
                         <a class="navbar-item" href="{{ route('about.laws-issuances') }}">
                             <span class="icon"><i class="fas fa-file-alt"></i></span>
                             <span>Laws and Issuances</span>
@@ -207,7 +203,7 @@
                         <a class="navbar-link {{ request()->routeIs('programs.index') ? 'is-active' : '' }}" href="{{ route('programs.index') }}">
                             <span class="icon-text">
                                 <span class="icon"><i class="fas fa-project-diagram"></i></span>
-                                <span>Programs and Services</span>
+                                <span>Programs</span>
                             </span>
                         </a>
                         <div class="navbar-dropdown">
@@ -227,7 +223,7 @@
                     <a class="navbar-link {{ request()->routeIs('gad-plan-budget', 'gad-plan-budgets.index') ? 'is-active' : '' }}" href="{{ route('gad-plan-budgets.index') }}">
                         <span class="icon-text">
                             <span class="icon"><i class="fas fa-coins"></i></span>
-                            <span>GAD Plans & Budgets</span>
+                            <span>GAD Plans</span>
                         </span>
                     </a>
                     <div class="navbar-dropdown">
@@ -270,24 +266,36 @@
                         @endauth
                     </div>
                 </div>
-                <a class="navbar-item {{ request()->routeIs('news-announcements') ? 'is-active' : '' }}" href="{{ route('news-announcements') }}">
-                    <span class="icon-text">
-                        <span class="icon"><i class="fas fa-bullhorn"></i></span>
-                        <span>News/Announcements</span>
-                    </span>
-                </a>
                 <a class="navbar-item {{ request()->routeIs('accomplishment-report') ? 'is-active' : '' }}" href="{{ route('accomplishment-report') }}">
                     <span class="icon-text">
                         <span class="icon"><i class="fas fa-chart-bar"></i></span>
-                        <span>Accomplishment Reports</span>
+                        <span>Reports</span>
                     </span>
                 </a>
-                <a class="navbar-item {{ request()->routeIs('contact') ? 'is-active' : '' }}" href="{{ route('contact') }}">
-                    <span class="icon-text">
-                        <span class="icon"><i class="fas fa-envelope"></i></span>
-                        <span>Contact</span>
-                    </span>
-                </a>
+
+                <!-- More Menu -->
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="#">
+                        <span class="icon-text">
+                            <span class="icon"><i class="fas fa-ellipsis-h"></i></span>
+                            <span>More</span>
+                        </span>
+                    </a>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item {{ request()->routeIs('news-announcements') ? 'is-active' : '' }}" href="{{ route('news-announcements') }}">
+                            <span class="icon"><i class="fas fa-bullhorn"></i></span>
+                            <span>News & Announcements</span>
+                        </a>
+                        <a class="navbar-item {{ request()->routeIs('contact') ? 'is-active' : '' }}" href="{{ route('contact') }}">
+                            <span class="icon"><i class="fas fa-envelope"></i></span>
+                            <span>Contact</span>
+                        </a>
+                        <a class="navbar-item {{ request()->routeIs('org-chart') ? 'is-active' : '' }}" href="{{ route('org-chart') }}">
+                            <span class="icon"><i class="fas fa-sitemap"></i></span>
+                            <span>GFPS Directory</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>

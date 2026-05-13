@@ -147,6 +147,8 @@
                         <li><a href="{{ route('admin.statistics.index') }}"><i class="fas fa-chart-pie"></i> Statistics</a></li>
                         <li><a href="{{ route('admin.banners.index') }}"><i class="fas fa-images"></i> Banners</a></li>
                         <li><a href="{{ route('admin.map-markers.index') }}"><i class="fas fa-map-pin"></i> Map Markers</a></li>
+                        <li><a href="{{ route('admin.about-menus.index') }}"><i class="fas fa-bars"></i> About Menu</a></li>
+                        <li><a href="{{ route('admin.gfps-members.index') }}"><i class="fas fa-sitemap"></i> GFPS Members</a></li>
                         <li><a href="{{ route('admin.charts.index') }}"><i class="fas fa-chart-line"></i> Charts</a></li>
                         <li><a href="{{ route('admin.announcements.index') }}"><i class="fas fa-bullhorn"></i> Announcements</a></li>
                         <li><a href="{{ route('admin.organization-members.index') }}"><i class="fas fa-sitemap"></i> Organization Members</a></li>

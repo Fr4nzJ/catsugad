@@ -27,12 +27,21 @@ class DatabaseSeeder extends Seeder
 
         // Run seeders for placeholder data
         $this->call([
+            CollegeSeeder::class,
             EnrollmentSeeder::class,
             StaffSeeder::class,
             AnnouncementSeeder::class,
             ProgramSeeder::class,
             AccomplishmentReportSeeder::class,
             GadKpiSeeder::class,
+            GADCoordinatorSeeder::class,
+            GADAgendaSeeder::class,
+            GADPlanBudgetSeeder::class,
+            GfpsMembersSeeder::class,
+            ChartSeeder::class,
+            AboutMenuSeeder::class,
+            AboutPageSeeder::class,
+            MapMarkerSeeder::class,
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\AccomplishmentReportController;
 use App\Http\Controllers\AnnouncementController;
@@ -29,6 +30,9 @@ use App\Http\Controllers\Admin\GADPlanBudgetController as AdminGADPlanBudgetCont
 use App\Http\Controllers\Admin\StaffImportController;
 use App\Http\Controllers\Admin\SeederController;
 use App\Http\Controllers\Admin\MapMarkerController;
+use App\Http\Controllers\OrgChartController;
+use App\Http\Controllers\Admin\GfpsMemberController;
+use App\Http\Controllers\Admin\AboutMenuController;
 use Illuminate\Support\Facades\Storage;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -44,36 +48,22 @@ Route::get('/storage/images/banners/{filename}', function ($filename) {
     return response()->file(Storage::disk('public')->path($path));
 })->name('banner.serve');
 
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
+Route::get('/about', [AboutController::class, 'index'])->name('about');
 
-Route::get('/about/mission-vision', function () {
-    return view('about.mission-vision');
-})->name('about.mission-vision');
+Route::get('/about/mission-vision', [AboutController::class, 'show'])->name('about.mission-vision');
 
-Route::get('/about/background', function () {
-    return view('about.background');
-})->name('about.background');
+Route::get('/about/background', [AboutController::class, 'show'])->name('about.background');
 
-Route::get('/about/organizational-chart', function () {
-    return view('about.organizational-chart');
-})->name('about.organizational-chart');
-
-// Organization Structure Routes
+// Organization Structure Routes (use GFPS Directory instead)
 Route::get('/organizational-structure', [OrganizationStructureController::class, 'index'])->name('organization-structure.index');
 
-Route::get('/about/laws-issuances', function () {
-    return view('about.laws-issuances');
-})->name('about.laws-issuances');
+Route::get('/about/laws-issuances', [AboutController::class, 'show'])->name('about.laws-issuances');
 
 Route::get('/about/gad-planning-budgeting', function () {
     return view('about.gad-planning-budgeting');
 })->name('about.gad-planning-budgeting');
 
-Route::get('/about/definition-terms', function () {
-    return view('about.definition-terms');
-})->name('about.definition-terms');
+Route::get('/about/definition-terms', [AboutController::class, 'show'])->name('about.definition-terms');
 
 Route::get('/programs-services', function () {
     return view('programs-services');
@@ -123,6 +113,10 @@ Route::get('/documents/{document}/download', [DocumentController::class, 'downlo
 
 // Contact Routes
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+
+// Organizational Chart Routes
+Route::get('/org-chart', [OrgChartController::class, 'index'])->name('org-chart');
+
 Route::get('/reports', function () {
     return view('reports');
 })->name('reports');
@@ -150,6 +144,14 @@ Route::prefix('admin')->group(function () {
         
         // Map Markers CRUD
         Route::resource('/map-markers', MapMarkerController::class, ['names' => 'admin.map-markers']);
+        
+        // About Menu Items CRUD
+        Route::resource('/about-menus', AboutMenuController::class, ['names' => 'admin.about-menus']);
+
+        // GFPS Members CRUD
+        Route::resource('/gfps-members', GfpsMemberController::class, ['names' => 'admin.gfps-members']);
+        Route::post('/gfps-members/import', [GfpsMemberController::class, 'import'])->name('admin.gfps-members.import');
+        Route::post('/gfps-members/{gfpsMember}/suggest', [GfpsMemberController::class, 'suggestName'])->name('admin.gfps-members.suggest');
         
         // Accomplishment Reports CRUD
         Route::resource('/accomplishment-reports', AdminAccomplishmentReportController::class, ['names' => 'admin.accomplishment-reports']);

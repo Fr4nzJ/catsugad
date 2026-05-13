@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\College;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class CollegeSeeder extends Seeder
 {
@@ -13,7 +14,7 @@ class CollegeSeeder extends Seeder
     public function run(): void
     {
         // Get unique colleges from accomplishment reports
-        $colleges = \DB::table('accomplishment_reports')
+        $colleges = DB::table('accomplishment_reports')
             ->distinct()
             ->whereNotNull('college')
             ->where('college', '!=', '')
@@ -22,6 +23,7 @@ class CollegeSeeder extends Seeder
             ->values();
 
         foreach ($colleges as $collegeName) {
+            // Use findOrCreateByName to avoid duplicate key errors
             College::findOrCreateByName($collegeName);
         }
 

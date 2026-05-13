@@ -22,6 +22,10 @@ use App\Models\GADPlanBudget;
 use App\Models\Enrollment;
 use App\Models\Staff;
 use App\Models\College;
+use App\Models\GfpsMember;
+use App\Models\AboutMenu;
+use App\Models\AboutPage;
+use App\Models\MapMarker;
 
 class SeederController extends Controller
 {
@@ -78,11 +82,65 @@ class SeederController extends Controller
                 'route' => 'admin.seeder.run',
                 'seeders' => 'GadKpiSeeder',
             ],
+            'gad_coordinator' => [
+                'name' => 'GAD Coordinators',
+                'description' => 'Seeds GAD coordinators for each college',
+                'route' => 'admin.seeder.run',
+                'seeders' => 'GADCoordinatorSeeder',
+            ],
+            'gad_agenda' => [
+                'name' => 'GAD Agendas',
+                'description' => 'Seeds GAD strategic agendas and initiatives',
+                'route' => 'admin.seeder.run',
+                'seeders' => 'GADAgendaSeeder',
+            ],
+            'gad_plan_budget' => [
+                'name' => 'GAD Plan & Budgets',
+                'description' => 'Seeds GAD planning, budgeting, and program initiatives',
+                'route' => 'admin.seeder.run',
+                'seeders' => 'GADPlanBudgetSeeder',
+            ],
+            'charts' => [
+                'name' => 'Analytics Charts',
+                'description' => 'Seeds sample charts for dashboard analytics',
+                'route' => 'admin.seeder.run',
+                'seeders' => 'ChartSeeder',
+            ],
+            'gfps_members' => [
+                'name' => 'GFPS Members',
+                'description' => 'Seeds GAD Focal Point System organizational members',
+                'route' => 'admin.seeder.run',
+                'seeders' => 'GfpsMembersSeeder',
+            ],
+            'about_menu' => [
+                'name' => 'About Menu',
+                'description' => 'Seeds About page menu items',
+                'route' => 'admin.seeder.run',
+                'seeders' => 'AboutMenuSeeder',
+            ],
+            'about_page' => [
+                'name' => 'About Pages',
+                'description' => 'Seeds About page content sections',
+                'route' => 'admin.seeder.run',
+                'seeders' => 'AboutPageSeeder',
+            ],
+            'map_markers' => [
+                'name' => 'Map Markers',
+                'description' => 'Seeds campus map markers',
+                'route' => 'admin.seeder.run',
+                'seeders' => 'MapMarkerSeeder',
+            ],
             'statistics' => [
                 'name' => 'Statistics',
                 'description' => 'Seeds student and employee statistics',
                 'route' => 'admin.seeder.run',
                 'seeders' => 'StatisticsSeeder',
+            ],
+            'all_data' => [
+                'name' => 'All Data (Complete Reseed)',
+                'description' => 'Seeds ALL available data - complete database population',
+                'route' => 'admin.seeder.run',
+                'seeders' => 'CollegeSeeder,EnrollmentSeeder,StaffSeeder,AnnouncementSeeder,ProgramSeeder,AccomplishmentReportSeeder,GadKpiSeeder,GADCoordinatorSeeder,GADAgendaSeeder,GADPlanBudgetSeeder,GfpsMembersSeeder,ChartSeeder,AboutMenuSeeder,AboutPageSeeder,MapMarkerSeeder',
             ],
         ];
     }
@@ -170,6 +228,30 @@ class SeederController extends Controller
                 'description' => 'Wipes GAD plan and budget data',
                 'icon' => 'fa-money-bill',
                 'tables' => ['gad_plan_budgets'],
+            ],
+            'gfps_members' => [
+                'name' => 'GFPS Members',
+                'description' => 'Wipes GFPS organizational members',
+                'icon' => 'fa-sitemap',
+                'tables' => ['gfps_members'],
+            ],
+            'about_menu' => [
+                'name' => 'About Menu',
+                'description' => 'Wipes About page menu data',
+                'icon' => 'fa-list',
+                'tables' => ['about_menus'],
+            ],
+            'about_page' => [
+                'name' => 'About Pages',
+                'description' => 'Wipes About page content',
+                'icon' => 'fa-file-alt',
+                'tables' => ['about_pages'],
+            ],
+            'map_markers' => [
+                'name' => 'Map Markers',
+                'description' => 'Wipes map marker data',
+                'icon' => 'fa-map-marker-alt',
+                'tables' => ['map_markers'],
             ],
             'enrollments' => [
                 'name' => 'Enrollments',
@@ -321,6 +403,18 @@ class SeederController extends Controller
             case 'colleges':
                 College::truncate();
                 break;
+            case 'gfps_members':
+                GfpsMember::truncate();
+                break;
+            case 'about_menu':
+                AboutMenu::truncate();
+                break;
+            case 'about_page':
+                AboutPage::truncate();
+                break;
+            case 'map_markers':
+                MapMarker::truncate();
+                break;
         }
     }
 
@@ -349,6 +443,10 @@ class SeederController extends Controller
             'enrollments' => Enrollment::count(),
             'staff' => Staff::count(),
             'colleges' => College::count(),
+            'gfps_members' => GfpsMember::count(),
+            'about_menu' => AboutMenu::count(),
+            'about_page' => AboutPage::count(),
+            'map_markers' => MapMarker::count(),
         ]);
     }
 }
