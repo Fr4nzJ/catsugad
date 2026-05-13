@@ -45,4 +45,5 @@ else
 fi
 
 echo -e "${GREEN}Starting Apache web server...${NC}"
+source /etc/apache2/envvars
 exec apache2 -D FOREGROUND
