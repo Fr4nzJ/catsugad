@@ -84,16 +84,10 @@ class College extends Model
      */
     public static function findOrCreateByName(string $name)
     {
-        $college = static::findByName($name);
-
-        if (!$college) {
-            $college = static::create([
-                'name' => $name,
-                'abbreviation' => static::generateAbbreviation($name),
-            ]);
-        }
-
-        return $college;
+        return static::firstOrCreate(
+            ['name' => $name],
+            ['abbreviation' => static::generateAbbreviation($name)]
+        );
     }
 
     /**
