@@ -10,3 +10,6 @@ storage/framework/views/
 .DS_Store
 npm-debug.log
 yarn-error.log
+Dockerfile
+docker-entrypoint.sh
+docker-compose.yml
