@@ -42,16 +42,16 @@
     {{-- Upload Section --}}
     <div class="box">
         <h2 class="subtitle is-5">
-            <i class="fas fa-file-upload"></i> Import Excel File
+            <i class="fas fa-file-upload"></i> Import CSV File
         </h2>
 
         <form action="{{ route('admin.staff.import.post') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="field">
-                <label class="label">Select File (.xlsx or .csv)</label>
+                <label class="label">Select CSV File</label>
                 <div class="control has-icons-left">
-                    <input class="input" type="file" name="file" accept=".xlsx,.csv" required>
+                    <input class="input" type="file" name="file" accept=".csv" required>
                     <span class="icon is-left">
                         <i class="fas fa-file"></i>
                     </span>

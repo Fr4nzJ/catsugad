@@ -23,7 +23,7 @@ class StaffImportController extends Controller
     public function import(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:xlsx,csv|max:5120',
+            'file' => 'required|mimes:csv,txt|max:5120',
             'truncate' => 'sometimes|boolean',
         ]);
 
