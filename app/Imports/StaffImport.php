@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Models\Staff;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use ZipArchive;
 
 class StaffImport
 {
@@ -58,14 +59,14 @@ class StaffImport
             throw new Exception("File not found: {$filePath}");
         }
 
-        $zip = new \ZipArchive();
+        $zip = new ZipArchive();
         $openResult = $zip->open($filePath);
         
         if ($openResult !== true) {
             $errorMsg = match($openResult) {
-                \ZipArchive::ER_NOZIP => "File is not a valid ZIP archive",
-                \ZipArchive::ER_INCONS => "Inconsistent ZIP file",
-                \ZipArchive::ER_CRC => "CRC error in ZIP file",
+                ZipArchive::ER_NOZIP => "File is not a valid ZIP archive",
+                ZipArchive::ER_INCONS => "Inconsistent ZIP file",
+                ZipArchive::ER_CRC => "CRC error in ZIP file",
                 default => "Failed to open ZIP file (error code: {$openResult})",
             };
             throw new Exception($errorMsg);
