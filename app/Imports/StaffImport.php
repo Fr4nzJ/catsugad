@@ -5,7 +5,7 @@ namespace App\Imports;
 use App\Models\Staff;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use ZipArchive;
+use OpenSpout\Reader\XLSX\Reader;
 
 class StaffImport
 {
@@ -48,7 +48,7 @@ class StaffImport
     }
 
     /**
-     * Parse XLSX file using native ZIP + XML
+     * Parse XLSX file using Spout (no ZipArchive dependency)
      */
     private function parseXlsx(string $filePath): array
     {
@@ -59,73 +59,38 @@ class StaffImport
             throw new Exception("File not found: {$filePath}");
         }
 
-        $zip = new ZipArchive();
-        $openResult = $zip->open($filePath);
-        
-        if ($openResult !== true) {
-            $errorMsg = match($openResult) {
-                ZipArchive::ER_NOZIP => "File is not a valid ZIP archive",
-                ZipArchive::ER_INCONS => "Inconsistent ZIP file",
-                ZipArchive::ER_CRC => "CRC error in ZIP file",
-                default => "Failed to open ZIP file (error code: {$openResult})",
-            };
-            throw new Exception($errorMsg);
-        }
-
         try {
-            // Read shared strings (for string references)
-            $strings = [];
-            if ($zip->locateName('xl/sharedStrings.xml') !== false) {
-                $stringXmlContent = $zip->getFromName('xl/sharedStrings.xml');
-                if ($stringXmlContent === false) {
-                    throw new Exception("Cannot read shared strings from XLSX");
-                }
-                $xmlStrings = simplexml_load_string($stringXmlContent);
-                if ($xmlStrings === false) {
-                    throw new Exception("Invalid XML in sharedStrings.xml");
-                }
-                foreach ($xmlStrings->si as $si) {
-                    $strings[] = (string)$si->t;
-                }
-            }
+            $reader = new Reader();
+            $reader->open($filePath);
 
-            // Read worksheet data
-            $worksheetContent = $zip->getFromName('xl/worksheets/sheet1.xml');
-            if ($worksheetContent === false) {
-                throw new Exception("Cannot read worksheet from XLSX");
-            }
-            
-            $xmlWorksheet = simplexml_load_string($worksheetContent);
-            if ($xmlWorksheet === false) {
-                throw new Exception("Invalid XML in worksheet");
-            }
-            
-            $rowIndex = 0;
+            $isFirstRow = true;
 
-            foreach ($xmlWorksheet->sheetData->row as $xmlRow) {
-                $rowIndex++;
-                if ($rowIndex === 1) continue; // Skip header
+            foreach ($reader->getSheetIterator() as $sheet) {
+                foreach ($sheet->getRowIterator() as $row) {
+                    // Skip header row
+                    if ($isFirstRow) {
+                        $isFirstRow = false;
+                        continue;
+                    }
 
-                $cellData = [];
+                    $cells = $row->getCells();
+                    $cellData = [];
 
-                foreach ($xmlRow->c as $cell) {
-                    // Get value
-                    if ((string)$cell['t'] === 's') {
-                        // String reference
-                        $cellData[] = $strings[(int)$cell->v] ?? '';
-                    } else {
-                        // Direct value
-                        $cellData[] = (string)$cell->v ?? '';
+                    // Convert cells to string values
+                    foreach ($cells as $cell) {
+                        $cellData[] = (string)($cell->getValue() ?? '');
+                    }
+
+                    if (!empty($cellData)) {
+                        $rows[] = $cellData;
                     }
                 }
-
-                if (!empty($cellData)) {
-                    $rows[] = $cellData;
-                }
             }
 
-        } finally {
-            $zip->close();
+            $reader->close();
+
+        } catch (Exception $e) {
+            throw new Exception("Failed to parse XLSX file: " . $e->getMessage());
         }
 
         if (empty($rows)) {
