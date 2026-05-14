@@ -2,6 +2,7 @@
 extensions = ["zip"]
 
 [phases.setup]
+aptPkgs = ["libzip-dev"]
 node = "22.5.1"
 
 [phases.build]
