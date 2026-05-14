@@ -2,17 +2,13 @@
 nixPkgs = [
   "php82",
   "php82Extensions.zip",
-  "php82Extensions.mbstring",
-  "php82Extensions.pdo_mysql",
-  "php82Extensions.bcmath",
-  "php82Extensions.intl",
   "unzip"
 ]
-aptPkgs = ["libzip-dev"]
 node = "22.5.1"
 
 [phases.build]
 cmds = [
+  "php -m | grep zip || (echo 'ZIP extension not loaded' && exit 1)",
   "npm ci --prefer-offline --no-audit",
   "npm run build"
 ]
